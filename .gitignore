@@ -1,13 +1,9 @@
-======================= start =======================
-
-.idea/
+# Maven #
 target/
-*.iml
-
-# Maven
 .mvn/
 mvnw
 mvnw.cmd
 
-# Log file
-*.log
+# IDEA #
+.idea/
+*.iml
