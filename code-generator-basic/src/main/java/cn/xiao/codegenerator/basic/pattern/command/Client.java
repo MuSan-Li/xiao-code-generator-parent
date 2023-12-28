@@ -1,7 +1,17 @@
 package cn.xiao.codegenerator.basic.pattern.command;
 
+/**
+ * 命令模式 测试类
+ *
+ * @author xiao
+ */
 public class Client {
 
+    /**
+     * main
+     *
+     * @param args
+     */
     public static void main(String[] args) {
         Driver driver1 = new Driver("TV");
         Driver driver2 = new Driver("panda");

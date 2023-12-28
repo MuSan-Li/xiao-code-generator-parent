@@ -6,10 +6,15 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 /**
  * 动态生成
@@ -22,12 +27,19 @@ public class DynamicGenerator {
 
     }
 
+    /**
+     * main
+     *
+     * @param args
+     * @throws TemplateException
+     * @throws IOException
+     */
     public static void main(String[] args) throws TemplateException, IOException {
-        String projectProperty = System.getProperty("user.dir") + File.separator + "code-generator-basic";
+        String projectProperty = System.getProperty("user.dir");
         String inputPath = projectProperty + File.separator + "/src/main/resources/templates/MainTemplate.java.ftl";
         String outputPath = projectProperty + File.separator + "templateOutput" + File.separator + "MainTemplate.java";
         MainTemplateConfig mainTemplateConfig = new MainTemplateConfig();
-        mainTemplateConfig.setAuthor("小小");
+        mainTemplateConfig.setAuthor("小小2");
         mainTemplateConfig.setOutputText("输出结果：");
         mainTemplateConfig.setLoop(false);
         doGenerate(inputPath, outputPath, mainTemplateConfig);
@@ -57,11 +69,11 @@ public class DynamicGenerator {
 
         // 3.创建模板对象，加载指定模板
         String fileName = new File(inputPath).getName();
-        Template template = configuration.getTemplate(fileName);
+        Template template = configuration.getTemplate(fileName, CharsetUtil.UTF_8);
 
-        // 5.指定生成的文件
-        Writer out = new FileWriter(outputPath);
-
+        // 5.指定生成的文件 中文乱码
+        // Writer out = new FileWriter(outputPath);
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8));
         // 6.调用process方法，处理并生成文件
         template.process(model, out);
 

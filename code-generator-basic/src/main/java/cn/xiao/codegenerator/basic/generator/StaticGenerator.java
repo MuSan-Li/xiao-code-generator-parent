@@ -29,9 +29,9 @@ public class StaticGenerator {
     public static void main(String[] args) throws FileNotFoundException {
         String projectProperty = System.getProperty("user.dir");
         System.out.println(projectProperty);
-        String srcPath = projectProperty + File.separator + "code-generator-template" + File.separator + "acm-template";
+        String srcPath = new File(projectProperty).getParent() + File.separator + "code-generator-template" + File.separator + "acm-template";
+        String destPath = projectProperty + File.separator + "templateOutput";
         // copyFileByHutool(srcPath, projectProperty);
-        String destPath = projectProperty + File.separator + "code-generator-basic" + File.separator + "templateOutput";
         copyFileByRecursion(srcPath, destPath);
 
     }
@@ -66,6 +66,7 @@ public class StaticGenerator {
         }
         // 源文件路径是否存在
         File file = new File(srcPath);
+        System.out.println(file);
         if (!file.exists()) {
             throw new RuntimeException("srcPath is not exist");
         }

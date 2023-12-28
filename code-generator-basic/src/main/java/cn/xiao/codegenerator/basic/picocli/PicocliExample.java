@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 /**
  * 入门案例 非交互式
+ * 交互式 Callable
+ * 非交互式 Runnable
  *
  * @author xiao
  */
@@ -18,14 +20,14 @@ public class PicocliExample implements Runnable {
     @CommandLine.Parameters(paramLabel = "<words>", description = "单词")
     private String[] words = {"Hello", "World"};
 
-    public void run() {
-        System.out.println("Font size: " + fontSize);
-        System.out.println("words: " + Arrays.toString(words));
-    }
-
     public static void main(String[] args) {
         int exitCode = new CommandLine(new PicocliExample()).execute(args);
         System.exit(exitCode);
+    }
+
+    public void run() {
+        System.out.println("Font size: " + fontSize);
+        System.out.println("words: " + Arrays.toString(words));
     }
 
 }

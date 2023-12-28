@@ -28,22 +28,12 @@ public class LoginExample implements Callable<Integer> {
     @Option(names = {"-cp", "--checkPassword"}, description = "校验密码", interactive = true, prompt = "请输入校验密码:", arity = "0..1")
     String checkPassword;
 
-    @Override
-    //3.所有参数都输入完成后，会执行 call 方法，可以在方法中编写业务逻辑
-    public Integer call() throws Exception {
-        // 打印出密码
-        System.out.println("密码是：" + password);
-        System.out.println("校验密码：" + checkPassword);
-        return 0;
-    }
-
-    //4.在 Main 方法中执行命令并传入参数
+    //4.在 BasicGeneratorMain 方法中执行命令并传入参数
     public static void main(String[] args) {
         args = new String[]{"-u", "user123", "-p"};
         args = processInteractiveOptions(LoginExample.class, args);
         new CommandLine(new LoginExample()).execute(args);
     }
-
 
     /**
      * 若用户为输入校验密码则强制校验
@@ -73,6 +63,15 @@ public class LoginExample implements Callable<Integer> {
             argSet.add(names[0]);
         }
         return argSet.toArray(new String[0]);
+    }
+
+    @Override
+    //3.所有参数都输入完成后，会执行 call 方法，可以在方法中编写业务逻辑
+    public Integer call() throws Exception {
+        // 打印出密码
+        System.out.println("密码是：" + password);
+        System.out.println("校验密码：" + checkPassword);
+        return 0;
     }
 
 }
