@@ -1,0 +1,26 @@
+package cn.xiao.codegenerator.basic.picocli;
+
+import picocli.CommandLine;
+
+import java.util.Arrays;
+
+@CommandLine.Command(name = "example", mixinStandardHelpOptions = true, version = "Picocli example 4.0")
+public class PicocliExample implements Runnable {
+
+    @CommandLine.Option(names = {"-fs", "--fort-size"}, description = "文字大小")
+    private int fortSize = 19;
+
+    @CommandLine.Parameters(paramLabel = "<words>", description = "单词")
+    private String[] words = {"Hello", "World"};
+
+    public void run() {
+        System.out.println("Fort size: " + fortSize);
+        System.out.println("words: " + Arrays.toString(words));
+    }
+
+    public static void main(String[] args) {
+        int exitCode = new CommandLine(new PicocliExample()).execute(args);
+        System.exit(exitCode);
+    }
+
+}
