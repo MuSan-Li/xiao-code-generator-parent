@@ -3,7 +3,7 @@
   "description": "ACM 示例模板生成器",
   "basePackage": "cn.xiao",
   "version": "1.0",
-  "author": "yupi",
+  "author": "xiao",
   "createTime": "2023-11-22",
   "fileConfig": {
     "inputRootPath": "C:/code/yuzi-generator/yuzi-generator-demo-projects/acm-template-pro",
@@ -43,7 +43,7 @@
         "fieldName": "author",
         "type": "String",
         "description": "作者注释",
-        "defaultValue": "yupi",
+        "defaultValue": "xiao",
         "abbr": "a"
       },
       {

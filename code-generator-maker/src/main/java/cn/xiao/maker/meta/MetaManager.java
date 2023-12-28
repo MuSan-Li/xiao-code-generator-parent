@@ -2,6 +2,7 @@ package cn.xiao.maker.meta;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
+import cn.xiao.maker.constant.CommonConstant;
 
 import java.util.Objects;
 
@@ -11,6 +12,10 @@ import java.util.Objects;
  * @author xiao
  */
 public class MetaManager {
+
+    private MetaManager() {
+        // 私有构造函数 防止外部实例化
+    }
 
     /**
      * 内存可见性 多个线程的本地副本可见
@@ -38,21 +43,9 @@ public class MetaManager {
 
 
     private static Meta initMetaObject() {
-        String metaJson = ResourceUtil.readUtf8Str("meta.json");
+        String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
         Meta meta = JSONUtil.toBean(metaJson, Meta.class);
         // TODO 校验meta对象
         return meta;
-    }
-
-
-    /**
-     * test
-     *
-     * @param args
-     */
-    public static void main(String[] args) {
-        String metaJson = ResourceUtil.readUtf8Str("meta.json");
-        Meta bean = JSONUtil.toBean(metaJson, Meta.class);
-        System.out.println(bean);
     }
 }

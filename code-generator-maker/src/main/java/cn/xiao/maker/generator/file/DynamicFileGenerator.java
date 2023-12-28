@@ -1,5 +1,6 @@
 package cn.xiao.maker.generator.file;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -49,6 +50,9 @@ public class DynamicFileGenerator {
         String fileName = new File(inputPath).getName();
         Template template = configuration.getTemplate(fileName, CharsetUtil.UTF_8);
 
+        if (!FileUtil.exist(outputPath)) {
+            FileUtil.touch(outputPath);
+        }
         // 5.指定生成的文件 中文乱码
         // Writer out = new FileWriter(outputPath);
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8));

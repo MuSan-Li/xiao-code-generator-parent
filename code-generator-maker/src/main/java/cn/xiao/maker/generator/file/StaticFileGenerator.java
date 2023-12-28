@@ -20,7 +20,7 @@ public class StaticFileGenerator {
      * @param srcPath  源路径
      * @param destPath 目标路径
      */
-    public static void copyFileByHutool(String srcPath, String destPath) {
+    public static void doGenerator(String srcPath, String destPath) {
         FileUtil.copy(srcPath, destPath, false);
         System.out.println("==== generator static file success ====");
     }
