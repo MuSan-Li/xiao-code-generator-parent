@@ -8,13 +8,13 @@ import java.util.Arrays;
 public class PicocliExample implements Runnable {
 
     @CommandLine.Option(names = {"-fs", "--fort-size"}, description = "文字大小")
-    private int fortSize = 19;
+    private int fontSize = 19;
 
     @CommandLine.Parameters(paramLabel = "<words>", description = "单词")
     private String[] words = {"Hello", "World"};
 
     public void run() {
-        System.out.println("Fort size: " + fortSize);
+        System.out.println("Font size: " + fontSize);
         System.out.println("words: " + Arrays.toString(words));
     }
 
