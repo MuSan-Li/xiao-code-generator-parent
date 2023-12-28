@@ -4,7 +4,12 @@ import picocli.CommandLine;
 
 import java.util.Arrays;
 
-@CommandLine.Command(name = "example", mixinStandardHelpOptions = true, version = "Picocli example 4.0")
+/**
+ * 入门案例 非交互式
+ *
+ * @author xiao
+ */
+@CommandLine.Command(name = "PicocliExample", mixinStandardHelpOptions = true)
 public class PicocliExample implements Runnable {
 
     @CommandLine.Option(names = {"-fs", "--fort-size"}, description = "文字大小")
