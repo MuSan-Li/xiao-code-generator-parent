@@ -46,9 +46,8 @@ public class MetaManager {
     private static Meta initMetaObject() {
         String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
         Meta meta = JSONUtil.toBean(metaJson, Meta.class);
-        // TODO 校验meta对象
-        String sourceProjectName = new File(meta.getFileConfig().getSourceRootPath()).getName();
-        meta.getFileConfig().setSourceProjectName(sourceProjectName);
+        // 校验meta对象
+        MetaValidator.doValidaAndFill(meta);
         return meta;
     }
 }

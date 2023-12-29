@@ -26,7 +26,7 @@ public class JarGenerator {
         // win
         String winMvnCommand = "mvn.cmd clean package -DskipTests=true";
         // other
-        String otherMvnCommand = "mvn clean package -DskipTests=true";
+        // String otherMvnCommand = "mvn clean package -DskipTests=true";
 
         String mvnCommand = winMvnCommand;
         ProcessBuilder processBuilder = new ProcessBuilder(mvnCommand.split(String.valueOf(StrPool.C_SPACE)));

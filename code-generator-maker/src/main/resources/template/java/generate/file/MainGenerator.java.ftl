@@ -17,7 +17,7 @@ public class MainGenerator {
 
     public static void doGenerate(Object model) {
         try {
-            String inputRootPath = "${fileConfig.inputRootPath}" + File.separator + "${fileConfig.sourceProjectName}";
+            String inputRootPath = "${fileConfig.inputRootPath}";
             String outputFileName = new File(inputRootPath).getName();
             String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
 

@@ -24,7 +24,6 @@ public class Meta {
         private String sourceRootPath;
         private String inputRootPath;
         private String outputRootPath;
-        private String sourceProjectName;
         private String type;
         private List<FilesDTO> files;
 
