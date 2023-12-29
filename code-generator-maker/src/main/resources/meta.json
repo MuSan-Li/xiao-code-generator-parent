@@ -6,8 +6,10 @@
   "author": "xiao",
   "createTime": "2023-11-22",
   "fileConfig": {
-    "inputRootPath": "D:/Project/xiao-code-generator-parent/code-generator-template/acm-template-pro",
+    "sourceRootPath": "D:/Project/xiao-code-generator-parent/code-generator-template/acm-template-pro",
+    "inputRootPath": ".source",
     "outputRootPath": "generated",
+    "sourceProjectName": "",
     "type": "dir",
     "files": [
       {

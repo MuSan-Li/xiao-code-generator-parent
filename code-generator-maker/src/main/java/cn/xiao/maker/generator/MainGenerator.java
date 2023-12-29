@@ -108,5 +108,9 @@ public class MainGenerator {
         String jarPath = "./target/" + jarName;
         ScriptGenerator.doGenerate(shellOutputPath, jarPath);
 
+        // 复制原始文件模板文件到.source路径下
+        String sourceRootPath = meta.getFileConfig().getSourceRootPath();
+        String sourceCopyDestPath = outputPath + File.separator + meta.getFileConfig().getInputRootPath();
+        FileUtil.copy(sourceRootPath, sourceCopyDestPath, true);
     }
 }

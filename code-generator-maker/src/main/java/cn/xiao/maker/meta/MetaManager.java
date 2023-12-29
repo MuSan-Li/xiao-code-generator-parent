@@ -4,6 +4,7 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.constant.CommonConstant;
 
+import java.io.File;
 import java.util.Objects;
 
 /**
@@ -46,6 +47,8 @@ public class MetaManager {
         String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
         Meta meta = JSONUtil.toBean(metaJson, Meta.class);
         // TODO 校验meta对象
+        String sourceProjectName = new File(meta.getFileConfig().getSourceRootPath()).getName();
+        meta.getFileConfig().setSourceProjectName(sourceProjectName);
         return meta;
     }
 }
