@@ -1,6 +1,8 @@
 package cn.xiao.cg.basic.generator;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
+import cn.xiao.cg.basic.model.DataModel;
 import cn.xiao.cg.basic.model.MainTemplateConfig;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -68,6 +70,9 @@ public class DynamicGenerator {
         // 3.创建模板对象，加载指定模板
         String fileName = new File(inputPath).getName();
         Template template = configuration.getTemplate(fileName, CharsetUtil.UTF_8);
+        if (!FileUtil.exist(outputPath)) {
+            FileUtil.touch(outputPath);
+        }
 
         // 5.指定生成的文件 中文乱码
         // Writer out = new FileWriter(outputPath);

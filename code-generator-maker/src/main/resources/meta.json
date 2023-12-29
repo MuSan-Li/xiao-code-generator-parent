@@ -18,12 +18,6 @@
         "generateType": "dynamic"
       },
       {
-        "inputPath": "src/main/java/cn/xiao/MainTemplate.java.ftl",
-        "outputPath": "src/main/java/cn/xiao/MainTemplate.java",
-        "type": "file",
-        "generateType": "dynamic"
-      },
-      {
         "inputPath": "README.md",
         "outputPath": "README.md",
         "type": "file",
@@ -68,18 +62,27 @@
         "abbr": "l"
       },
       {
-        "fieldName": "author",
-        "type": "String",
-        "description": "作者注释",
-        "defaultValue": "xiao",
-        "abbr": "a"
-      },
-      {
-        "fieldName": "outputText",
-        "type": "String",
-        "description": "输出信息",
-        "defaultValue": "sum = ",
-        "abbr": "o"
+        "groupKey": "mainTemplate",
+        "groupName": "核心模板",
+        "type": "MainTemplate",
+        "description": "用于生成核心模板文件",
+        "condition": "loop",
+        "models": [
+          {
+            "fieldName": "author",
+            "type": "String",
+            "description": "作者注释",
+            "defaultValue": "xiao",
+            "abbr": "a"
+          },
+          {
+            "fieldName": "outputText",
+            "type": "String",
+            "description": "输出信息",
+            "defaultValue": "sum = ",
+            "abbr": "o"
+          }
+        ]
       }
     ]
   }

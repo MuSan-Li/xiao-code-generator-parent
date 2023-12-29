@@ -110,8 +110,8 @@ public abstract class GenerateTemplate {
 
 
         // cli.command.GeneratorCommand
-        inputFilePath = inputResourcePath + File.separator + "template/java/cli/command/GeneratorCommand.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + "/cli/command/GeneratorCommand.java";
+        inputFilePath = inputResourcePath + File.separator + "template/java/cli/command/GenerateCommand.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/cli/command/GenerateCommand.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // cli.command.ListGenerator

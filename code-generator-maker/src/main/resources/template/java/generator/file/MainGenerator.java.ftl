@@ -37,7 +37,14 @@ public class MainGenerator {
             String outputPath;
 
 <#list modelConfig.models as modelInfo>
-            ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+    <#if modelInfo.groupKey??>
+        <#list modelInfo.models as subModelInfo>
+            ${subModelInfo.type} ${subModelInfo.fieldName} = model.${modelInfo.groupKey}.${subModelInfo.fieldName};
+        </#list>
+    <#else>
+    ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+    </#if>
+
 </#list>
 
 <#list fileConfig.files as fileInfo>
@@ -48,21 +55,11 @@ public class MainGenerator {
                 <@generateFile indent="                     " fileInfo=fileInfo />
             </#list>
             }
-
-            <#else >
-
-                <@generateFile indent="        " fileInfo=fileInfo/>
-
-            </#if>
-
-        <#else>
-            <#if fileInfo.condition??>
-            if(${fileInfo.condition}){
-                <@generateFile indent="            " fileInfo=fileInfo/>
-            }
-            <#else>
-                <@generateFile indent="             " fileInfo=fileInfo/>
+        <#else >
+            <@generateFile indent="        " fileInfo=fileInfo/>
         </#if>
+    <#else>
+        <@generateFile indent="            " fileInfo=fileInfo/>
     </#if>
 </#list>
 
