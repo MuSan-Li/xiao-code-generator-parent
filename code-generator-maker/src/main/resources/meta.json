@@ -15,6 +15,13 @@
         "inputPath": "src/main/java/cn/xiao/MainTemplate.java.ftl",
         "outputPath": "src/main/java/cn/xiao/MainTemplate.java",
         "type": "file",
+        "generateType": "dynamic",
+        "condition": "needGit"
+      },
+      {
+        "inputPath": "src/main/java/cn/xiao/MainTemplate.java.ftl",
+        "outputPath": "src/main/java/cn/xiao/MainTemplate.java",
+        "type": "file",
         "generateType": "dynamic"
       },
       {
@@ -31,7 +38,7 @@
         "fieldName": "needGit",
         "type": "boolean",
         "description": "是否生成.gitignore文件",
-        "defaultValue": false,
+        "defaultValue": true,
         "abbr": "n"
       },
       {
