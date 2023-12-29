@@ -82,6 +82,21 @@ public abstract class GenerateTemplate {
         outputFilePath = outputBaseJavaPackagePath + "/model/DataModel.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
+        // generate.file.MainGenerator
+        inputFilePath = inputResourcePath + File.separator + "template/java/generator/file/MainGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/file/MainGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // generate.file.DynamicGenerator
+        inputFilePath = inputResourcePath + File.separator + "template/java/generator/file/DynamicGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/file/DynamicGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // generate.file.StaticGenerator
+        inputFilePath = inputResourcePath + File.separator + "template/java/generator/file/StaticGenerator.java.ftl";
+        outputFilePath = outputBaseJavaPackagePath + "/generator/file/StaticGenerator.java";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
         // cli.CommandExecutor
         inputFilePath = inputResourcePath + File.separator + "template/java/cli/CommandExecutor.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + "/cli/CommandExecutor.java";
@@ -102,21 +117,6 @@ public abstract class GenerateTemplate {
         // cli.command.ListGenerator
         inputFilePath = inputResourcePath + File.separator + "template/java/cli/command/ListCommand.java.ftl";
         outputFilePath = outputBaseJavaPackagePath + "/cli/command/ListCommand.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // generate.file.MainGenerator
-        inputFilePath = inputResourcePath + File.separator + "template/java/generate/file/MainGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + "/generate/file/MainGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // generate.file.DynamicGenerator
-        inputFilePath = inputResourcePath + File.separator + "template/java/generate/file/DynamicGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + "/generate/file/DynamicGenerator.java";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // generate.file.StaticGenerator
-        inputFilePath = inputResourcePath + File.separator + "template/java/generate/file/StaticGenerator.java.ftl";
-        outputFilePath = outputBaseJavaPackagePath + "/generate/file/StaticGenerator.java";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
 
         // GeneratorMain

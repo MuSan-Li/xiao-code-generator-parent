@@ -28,13 +28,6 @@
   "modelConfig": {
     "models": [
       {
-        "fieldName": "needGit",
-        "type": "boolean",
-        "description": "是否生成.gitignore文件",
-        "defaultValue": false,
-        "abbr": "n"
-      },
-      {
         "fieldName": "loop",
         "type": "boolean",
         "description": "是否生成循环",

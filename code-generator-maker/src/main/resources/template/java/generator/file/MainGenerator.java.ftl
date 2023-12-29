@@ -4,6 +4,7 @@ import freemarker.template.TemplateException;
 
 import java.io.File;
 import java.io.IOException;
+import ${basePackage}.model.DataModel;
 
 /**
  * 静态动态组合生成
@@ -15,7 +16,7 @@ public class MainGenerator {
     private MainGenerator() {
     }
 
-    public static void doGenerate(Object model) {
+    public static void doGenerate(DataModel model) {
         try {
             String inputRootPath = "${fileConfig.inputRootPath}";
             String outputFileName = new File(inputRootPath).getName();
