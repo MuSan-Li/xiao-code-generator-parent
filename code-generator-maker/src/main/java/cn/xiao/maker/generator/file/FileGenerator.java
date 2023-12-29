@@ -1,10 +1,6 @@
 package cn.xiao.maker.generator.file;
 
-import cn.xiao.maker.model.DataModel;
-import freemarker.template.TemplateException;
-
 import java.io.File;
-import java.io.IOException;
 
 /**
  * 静态动态组合生成
@@ -13,21 +9,6 @@ import java.io.IOException;
  */
 public class FileGenerator {
     private FileGenerator() {
-    }
-
-    /**
-     * main
-     *
-     * @param args
-     * @throws IOException
-     * @throws TemplateException
-     */
-    public static void main(String[] args) throws IOException, TemplateException {
-        DataModel model = new DataModel();
-        model.setAuthor("小小");
-        model.setOutputText("输出结果：");
-        model.setLoop(false);
-        doGenerator(model);
     }
 
 

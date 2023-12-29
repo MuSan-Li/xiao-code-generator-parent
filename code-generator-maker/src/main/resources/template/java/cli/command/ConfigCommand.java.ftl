@@ -1,8 +1,8 @@
-package cn.xiao.maker.cli.command;
+package ${basePackage}.cli.command;
 
 
 import cn.hutool.core.util.ReflectUtil;
-import cn.xiao.maker.model.DataModel;
+import ${basePackage}.model.DataModel;
 import picocli.CommandLine;
 
 import java.lang.reflect.Field;
@@ -10,9 +10,9 @@ import java.lang.reflect.Field;
 /**
  * 查看参数信息
  *
- * @author xiao
+ * @author ${author}
  */
-@CommandLine.Command(name = "config", description = "查看参数信息", mixinStandardHelpOptions = true)
+@CommandLine.Command(name = "config", mixinStandardHelpOptions = true)
 public class ConfigCommand implements Runnable {
 
     @Override

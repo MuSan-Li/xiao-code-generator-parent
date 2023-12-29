@@ -64,6 +64,9 @@ public class StaticGenerator {
         if (Objects.equals(srcPath, destPath)) {
             throw new RuntimeException("srcPath and destPath is same");
         }
+        if(!FileUtil.exist(srcPath)){
+            FileUtil.mkdir(srcPath);
+        }
         // 源文件路径是否存在
         File file = new File(srcPath);
         System.out.println(file);
