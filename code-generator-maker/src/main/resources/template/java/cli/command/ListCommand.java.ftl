@@ -18,8 +18,9 @@ public class ListCommand implements Runnable {
     @Override
     public void run() {
         //当前根路径
-        String path = "${fileConfig.inputRootPath}";
-        List<File> files = FileUtil.loopFiles(path);
+        String outputFileName = new File("${fileConfig.inputRootPath}").getName();
+        String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
+        List<File> files = FileUtil.loopFiles(new File(outputRootPath).getAbsolutePath());
         files.forEach(System.out::println);
     }
 }

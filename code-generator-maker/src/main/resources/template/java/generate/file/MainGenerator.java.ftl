@@ -18,14 +18,15 @@ public class MainGenerator {
     public static void doGenerate(Object model) {
         try {
             String inputRootPath = "${fileConfig.inputRootPath}";
-            String outputRootPath = "${fileConfig.outputRootPath}";
+            String outputFileName = new File(inputRootPath).getName();
+            String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
 
             String inputPath;
             String outputPath;
 
         <#list fileConfig.files as fileInfo>
-            inputPath = new File(inputRootPath + File.separator + "${fileInfo.inputPath}").getAbsolutePath();
-            outputPath = new File(outputRootPath + File.separator + "${fileInfo.outputPath}").getAbsolutePath();
+            inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
+            outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
             <#if fileInfo.generateType=="static">
             StaticGenerator.doGenerate(inputPath,outputPath);
             <#else>
