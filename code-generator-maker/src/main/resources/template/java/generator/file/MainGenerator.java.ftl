@@ -6,6 +6,17 @@ import java.io.File;
 import java.io.IOException;
 import ${basePackage}.model.DataModel;
 
+
+<#macro generateFile indent fileInfo>
+${indent}inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
+${indent}outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
+<#if fileInfo.generateType=="static">
+${indent}StaticGenerator.doGenerate(inputPath,outputPath);
+<#else>
+${indent}DynamicGenerator.doGenerate(inputPath, outputPath, model);
+</#if>
+</#macro>
+
 /**
  * 静态动态组合生成
  *
@@ -25,27 +36,36 @@ public class MainGenerator {
             String inputPath;
             String outputPath;
 
-        <#list fileConfig.files as fileInfo>
+<#list modelConfig.models as modelInfo>
+            ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+</#list>
+
+<#list fileConfig.files as fileInfo>
+    <#if fileInfo.groupKey??>
+        <#if fileInfo.condition??>
+            if(${fileInfo.condition}){
+            <#list fileInfo.files as fileInfo>
+                <@generateFile indent="                     " fileInfo=fileInfo />
+            </#list>
+            }
+
+            <#else >
+
+                <@generateFile indent="        " fileInfo=fileInfo/>
+
+            </#if>
+
+        <#else>
             <#if fileInfo.condition??>
-            if(model.${fileInfo.condition}){
-                inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
-                outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
-                <#if fileInfo.generateType=="static">
-                    StaticGenerator.doGenerate(inputPath,outputPath);
-                <#else>
-                    DynamicGenerator.doGenerate(inputPath, outputPath, model);
-                </#if>
+            if(${fileInfo.condition}){
+                <@generateFile indent="            " fileInfo=fileInfo/>
             }
             <#else>
-                inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
-                outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
-                <#if fileInfo.generateType=="static">
-                StaticGenerator.doGenerate(inputPath,outputPath);
-                <#else>
-                DynamicGenerator.doGenerate(inputPath, outputPath, model);
-                </#if>
-            </#if>
-        </#list>
+                <@generateFile indent="             " fileInfo=fileInfo/>
+        </#if>
+    </#if>
+</#list>
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

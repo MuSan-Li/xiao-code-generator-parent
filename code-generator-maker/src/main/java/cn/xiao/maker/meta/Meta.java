@@ -27,6 +27,7 @@ public class Meta {
         private String type;
         private List<FilesDTO> files;
 
+
         @NoArgsConstructor
         @Data
         public static class FilesDTO {
@@ -35,6 +36,12 @@ public class Meta {
             private String type;
             private String generateType;
             private String condition;
+            //  groupKey：表示组的唯一标识
+            private String groupKey;
+            //  groupName：组的名称
+            private String groupName;
+            //  files：值为 group内的多个参数
+            private List<FilesDTO> files;
         }
     }
 

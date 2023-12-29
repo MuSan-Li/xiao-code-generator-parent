@@ -15,8 +15,7 @@
         "inputPath": "src/main/java/cn/xiao/MainTemplate.java.ftl",
         "outputPath": "src/main/java/cn/xiao/MainTemplate.java",
         "type": "file",
-        "generateType": "dynamic",
-        "condition": "needGit"
+        "generateType": "dynamic"
       },
       {
         "inputPath": "src/main/java/cn/xiao/MainTemplate.java.ftl",
@@ -29,6 +28,26 @@
         "outputPath": "README.md",
         "type": "file",
         "generateType": "static"
+      },
+      {
+        "groupKey": "git",
+        "groupName": "开源",
+        "type": "group",
+        "condition": "needGit",
+        "files": [
+          {
+            "inputPath": ".gitignore",
+            "outputPath": ".gitignore",
+            "type": "file",
+            "generateType": "static"
+          },
+          {
+            "inputPath": "README.md",
+            "outputPath": "README.md",
+            "type": "file",
+            "generateType": "static"
+          }
+        ]
       }
     ]
   },

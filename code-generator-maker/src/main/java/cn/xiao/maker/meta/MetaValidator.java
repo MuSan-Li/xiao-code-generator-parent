@@ -10,7 +10,6 @@ import cn.xiao.maker.meta.enums.FileGenerateTypeEnum;
 import cn.xiao.maker.meta.enums.FileTypeEnum;
 import cn.xiao.maker.meta.enums.ModelTypeEnum;
 
-import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 
@@ -81,6 +80,10 @@ public class MetaValidator {
             return;
         }
         for (Meta.FileConfigDTO.FilesDTO fileInfo : fileInfoList) {
+            // 分组不为空 跳过
+            if (FileTypeEnum.GROUP.getValue().equals(fileInfo.getType())) {
+                continue;
+            }
             // inputPath 必填
             String inputPath = fileInfo.getInputPath();
             if (StrUtil.isBlank(inputPath)) {
