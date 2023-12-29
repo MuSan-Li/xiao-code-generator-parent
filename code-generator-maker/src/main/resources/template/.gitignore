@@ -1,0 +1,13 @@
+git# Maven #
+target/
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDEA #
+.idea/
+*.iml
+
+# generator #
+generated/
+templateOutput/

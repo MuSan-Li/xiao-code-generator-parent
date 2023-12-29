@@ -5,6 +5,7 @@ import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.text.StrPool;
 import cn.xiao.maker.generator.file.DynamicFileGenerator;
+import cn.xiao.maker.generator.file.StaticFileGenerator;
 import cn.xiao.maker.meta.Meta;
 import cn.xiao.maker.meta.MetaManager;
 
@@ -99,18 +100,48 @@ public class MainGenerator {
         inputFilePath = inputResourcePath + File.separator + "template/pom.xml.ftl";
         outputFilePath = outputPath + File.separator + "pom.xml";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // gitignore
+        inputFilePath = inputResourcePath + File.separator + "template/.gitignore";
+        outputFilePath = outputPath + File.separator + ".gitignore";
+        StaticFileGenerator.doGenerate(inputFilePath, outputFilePath);
+
         // 构建jar包
         JarGenerator.doGenerate(outputPath);
 
         // script文件
-        String shellOutputPath = outputPath + File.separator + "generator";
         String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
         String jarPath = "./target/" + jarName;
-        ScriptGenerator.doGenerate(shellOutputPath, jarPath);
+        ScriptGenerator.doGenerate(outputPath, jarPath);
+
 
         // 复制原始文件模板文件到.source路径下
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
         String sourceCopyDestPath = outputPath + File.separator + meta.getFileConfig().getInputRootPath();
         FileUtil.copy(sourceRootPath, sourceCopyDestPath, true);
+
+        // 生成README.md文件
+        inputFilePath = inputResourcePath + File.separator + "template/README.md.ftl";
+        outputFilePath = outputPath + File.separator + "README.md";
+        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+
+        // 制作精简代码包
+        String distOutputPath = outputPath + "-dist";
+        // copy jar file
+        String targetPath = distOutputPath + File.separator + "target";
+        FileUtil.mkdir(targetPath);
+        String sourceJarPath = outputPath + File.separator + "target" + File.separator + jarName;
+        FileUtil.copy(sourceJarPath, targetPath, true);
+        // copy script file
+        String mavenScriptOutputPath = outputPath + File.separator + "generator";
+        FileUtil.copy(mavenScriptOutputPath + ".sh", distOutputPath, true);
+        FileUtil.copy(mavenScriptOutputPath + ".bat", distOutputPath, true);
+
+        String gitScriptOutputPath = outputPath + File.separator + "git-init";
+        FileUtil.copy(gitScriptOutputPath + ".sh", distOutputPath, true);
+        FileUtil.copy(gitScriptOutputPath + ".bat", distOutputPath, true);
+
+        // copy template file
+        FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
     }
 }
