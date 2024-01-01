@@ -1,7 +1,5 @@
 package cn.xiao.maker.template;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -72,7 +70,7 @@ public class TemplateMaker {
         // 1.2复制原始模板到工作空间
         String workSpace = ".temp";
         String tempDirPath = projectPath + File.separator + workSpace;
-        String templateDirPath = tempDirPath + File.separator + originLastFileName + "-" + id;
+        String templateDirPath = tempDirPath + File.separator + originLastFileName + StrUtil.DASHED + id;
         if (!FileUtil.exist(templateDirPath)) {
             FileUtil.mkdir(templateDirPath);
             FileUtil.copy(originRootPath, templateDirPath, true);
@@ -103,9 +101,7 @@ public class TemplateMaker {
         String metaOutPath = sourceRootPath + File.separator + "meta.json";
 
         if (FileUtil.exist(metaOutPath)) {
-            Meta oldMetaInfo = JSONUtil.toBean(FileUtil.readUtf8String(metaOutPath), Meta.class);
-            BeanUtil.copyProperties(newMeta, oldMetaInfo, CopyOptions.create().ignoreNullValue());
-            newMeta = oldMetaInfo;
+            newMeta = JSONUtil.toBean(FileUtil.readUtf8String(metaOutPath), Meta.class);
 
             List<Meta.FileConfigDTO.FilesDTO> filesDTOList = newMeta.getFileConfig().getFiles();
             filesDTOList.add(filesDTO);
@@ -134,7 +130,7 @@ public class TemplateMaker {
         models.add(modelsDTO);
         newMeta.setModelConfig(modelConfigDTO);
 
-        // 3.3输入元信息文件
+        // 3.3创建元信息文件
         FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutPath);
 
         System.out.println("============= success =============");
