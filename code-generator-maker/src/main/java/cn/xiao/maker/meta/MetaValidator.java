@@ -6,7 +6,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.PathUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.xiao.maker.meta.enums.FileGenerateTypeEnum;
 import cn.xiao.maker.meta.enums.FileTypeEnum;
 import cn.xiao.maker.meta.enums.ModelTypeEnum;

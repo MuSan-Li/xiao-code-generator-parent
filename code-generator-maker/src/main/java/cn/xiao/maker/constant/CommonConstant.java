@@ -7,11 +7,11 @@ package cn.xiao.maker.constant;
  */
 public abstract class CommonConstant {
 
-    private CommonConstant() {
-    }
-
     /**
      * 元信息名称
      */
     public static final String META_NAME = "meta.json";
+
+    private CommonConstant() {
+    }
 }

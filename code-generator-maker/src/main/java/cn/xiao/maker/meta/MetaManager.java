@@ -4,7 +4,6 @@ import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.constant.CommonConstant;
 
-import java.io.File;
 import java.util.Objects;
 
 /**
@@ -14,16 +13,16 @@ import java.util.Objects;
  */
 public class MetaManager {
 
-    private MetaManager() {
-        // 私有构造函数 防止外部实例化
-    }
-
     /**
      * 内存可见性 多个线程的本地副本可见
      * 多个线程同时进来 只会进一次 进一次后 直接返回
      * 一个线程修改 其他线程立马可见
      */
     private static volatile Meta meta;
+
+    private MetaManager() {
+        // 私有构造函数 防止外部实例化
+    }
 
     /**
      * 双检锁单例模式

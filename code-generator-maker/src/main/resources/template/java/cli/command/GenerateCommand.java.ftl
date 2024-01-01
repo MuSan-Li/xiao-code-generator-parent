@@ -34,7 +34,8 @@ import java.util.concurrent.Callable;
 */
 @Data
 @CommandLine.Command(name = "generate", mixinStandardHelpOptions = true)
-public class GenerateCommand implements Callable<Integer> {
+public class GenerateCommand implements Callable
+<Integer> {
 
     <#list modelConfig.models as modelInfo>
 
@@ -74,7 +75,7 @@ public class GenerateCommand implements Callable<Integer> {
         <#if modelInfo.groupKey??>
             <#if modelInfo.condition??>
                 if(${modelInfo.condition}){
-                    <@generateCommand indent=" " modelInfo=modelInfo/>
+                <@generateCommand indent=" " modelInfo=modelInfo/>
                 }
             <#else>
                 <@generateCommand indent=" " modelInfo=modelInfo/>
@@ -92,4 +93,4 @@ public class GenerateCommand implements Callable<Integer> {
     MainGenerator.doGenerate(dataModel);
     return 0;
     }
-}
+    }

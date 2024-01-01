@@ -1,13 +1,17 @@
 package cn.xiao.maker.meta;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
-@NoArgsConstructor
+/**
+ * 元信息配置
+ *
+ * @author xiao
+ */
 @Data
-public class Meta {
+public class Meta implements Serializable {
 
     private String name;
     private String description;
@@ -18,9 +22,8 @@ public class Meta {
     private FileConfigDTO fileConfig;
     private ModelConfigDTO modelConfig;
 
-    @NoArgsConstructor
     @Data
-    public static class FileConfigDTO {
+    public static class FileConfigDTO implements Serializable {
         private String sourceRootPath;
         private String inputRootPath;
         private String outputRootPath;
@@ -28,9 +31,8 @@ public class Meta {
         private List<FilesDTO> files;
 
 
-        @NoArgsConstructor
         @Data
-        public static class FilesDTO {
+        public static class FilesDTO implements Serializable {
             private String inputPath;
             private String outputPath;
             private String type;
@@ -45,14 +47,12 @@ public class Meta {
         }
     }
 
-    @NoArgsConstructor
     @Data
-    public static class ModelConfigDTO {
+    public static class ModelConfigDTO implements Serializable {
         private List<ModelsDTO> models;
 
-        @NoArgsConstructor
         @Data
-        public static class ModelsDTO {
+        public static class ModelsDTO implements Serializable {
             private String fieldName;
             private String type;
             private String description;

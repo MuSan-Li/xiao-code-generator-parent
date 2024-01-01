@@ -8,33 +8,33 @@ import ${basePackage}.model.DataModel;
 
 
 <#macro generateFile indent fileInfo>
-${indent}inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
-${indent}outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
-<#if fileInfo.generateType=="static">
-${indent}StaticGenerator.doGenerate(inputPath,outputPath);
-<#else>
-${indent}DynamicGenerator.doGenerate(inputPath, outputPath, model);
-</#if>
+    ${indent}inputPath = new File(inputRootPath, "${fileInfo.inputPath}").getAbsolutePath();
+    ${indent}outputPath = new File(outputRootPath, "${fileInfo.outputPath}").getAbsolutePath();
+    <#if fileInfo.generateType=="static">
+        ${indent}StaticGenerator.doGenerate(inputPath,outputPath);
+    <#else>
+        ${indent}DynamicGenerator.doGenerate(inputPath, outputPath, model);
+    </#if>
 </#macro>
 
 /**
- * 静态动态组合生成
- *
- * @author ${author}
- */
+* 静态动态组合生成
+*
+* @author ${author}
+*/
 public class MainGenerator {
 
-    private MainGenerator() {
-    }
+private MainGenerator() {
+}
 
-    public static void doGenerate(DataModel model) {
-        try {
-            String inputRootPath = "${fileConfig.inputRootPath}";
-            String outputFileName = new File(inputRootPath).getName();
-            String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
+public static void doGenerate(DataModel model) {
+try {
+String inputRootPath = "${fileConfig.inputRootPath}";
+String outputFileName = new File(inputRootPath).getName();
+String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
 
-            String inputPath;
-            String outputPath;
+String inputPath;
+String outputPath;
 
 <#list modelConfig.models as modelInfo>
     <#if modelInfo.groupKey??>
@@ -42,7 +42,7 @@ public class MainGenerator {
             ${subModelInfo.type} ${subModelInfo.fieldName} = model.${modelInfo.groupKey}.${subModelInfo.fieldName};
         </#list>
     <#else>
-    ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+        ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
     </#if>
 
 </#list>
@@ -63,8 +63,8 @@ public class MainGenerator {
     </#if>
 </#list>
 
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+} catch (Exception e) {
+throw new RuntimeException(e);
+}
+}
 }

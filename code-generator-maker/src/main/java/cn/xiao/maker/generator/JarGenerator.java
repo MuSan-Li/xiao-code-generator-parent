@@ -1,18 +1,16 @@
 package cn.xiao.maker.generator;
 
 import cn.hutool.core.text.StrPool;
-import cn.hutool.core.util.StrUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 
 /**
- * jar 生成
+ * 执行 mvn 打包命令
  *
  * @author xiao
  */
@@ -38,7 +36,7 @@ public class JarGenerator {
         // 读取命令输出
         InputStream inputStream = process.getInputStream();
 
-        BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream,"GBK"));
+        BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream, "GBK"));
         String line;
         while ((line = bf.readLine()) != null) {
             System.out.println(line);

@@ -3,7 +3,7 @@ package cn.xiao.maker;
 import cn.xiao.maker.generator.main.MainGenerator;
 
 /**
- * main
+ * 主入口
  *
  * @author xiao
  */

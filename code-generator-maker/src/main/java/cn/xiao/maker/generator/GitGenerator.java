@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 /**
- * git 生成
+ * 执行 git 初始化命令
  *
  * @author xiao
  */

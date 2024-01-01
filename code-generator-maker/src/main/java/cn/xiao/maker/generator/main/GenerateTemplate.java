@@ -15,7 +15,41 @@ import freemarker.template.TemplateException;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * 生成模板主类
+ *
+ * @author xiao
+ */
 public abstract class GenerateTemplate {
+
+    /**
+     * 复制原始文件模板文件到.source路径下
+     *
+     * @param meta
+     * @param outputPath
+     * @return
+     */
+    private static String copySource(Meta meta, String outputPath) {
+        String sourceRootPath = meta.getFileConfig().getSourceRootPath();
+        String destSourcePath = outputPath + File.separator + new File(meta.getFileConfig().getInputRootPath()).getParent();
+        FileUtil.copy(sourceRootPath, destSourcePath, true);
+        return destSourcePath;
+    }
+
+    /**
+     * 生成script文件
+     *
+     * @param meta
+     * @param outputPath
+     * @return
+     * @throws IOException
+     */
+    private static String buildScript(Meta meta, String outputPath) throws IOException {
+        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
+        String jarPath = "./target/" + jarName;
+        ScriptGenerator.doGenerate(outputPath, jarPath);
+        return jarName;
+    }
 
     /**
      * 主流程
@@ -55,7 +89,6 @@ public abstract class GenerateTemplate {
         // 制作精简代码包
         buildDist(outputPath, jarName, destSourcePath);
     }
-
 
     /**
      * 生成文件
@@ -140,7 +173,6 @@ public abstract class GenerateTemplate {
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
     }
 
-
     /**
      * 制作精简代码包
      *
@@ -169,36 +201,6 @@ public abstract class GenerateTemplate {
 
         // 复制模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
-    }
-
-
-    /**
-     * 复制原始文件模板文件到.source路径下
-     *
-     * @param meta
-     * @param outputPath
-     * @return
-     */
-    private static String copySource(Meta meta, String outputPath) {
-        String sourceRootPath = meta.getFileConfig().getSourceRootPath();
-        String destSourcePath = outputPath + File.separator + new File(meta.getFileConfig().getInputRootPath()).getParent();
-        FileUtil.copy(sourceRootPath, destSourcePath, true);
-        return destSourcePath;
-    }
-
-    /**
-     * 生成script文件
-     *
-     * @param meta
-     * @param outputPath
-     * @return
-     * @throws IOException
-     */
-    private static String buildScript(Meta meta, String outputPath) throws IOException {
-        String jarName = String.format("%s-%s-jar-with-dependencies.jar", meta.getName(), meta.getVersion());
-        String jarPath = "./target/" + jarName;
-        ScriptGenerator.doGenerate(outputPath, jarPath);
-        return jarName;
     }
 
 }

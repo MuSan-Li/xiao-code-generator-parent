@@ -1,7 +1,7 @@
 package cn.xiao.maker.generator.main;
 
 /**
- * 生成器入口
+ * 生成模板子类
  *
  * @author xiao
  */

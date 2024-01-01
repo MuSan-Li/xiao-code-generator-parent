@@ -10,15 +10,20 @@ import picocli.CommandLine.Option;
 @Data
 public class TestArgGroupCommad implements Runnable {
 
-    @Option(names = {"-n", "--needGit"}, arity = "0..1", description = "是否生成 .gitignore文件", interactive = true, echo = true)
-    private boolean needGit = true;
-
-    @Option(names = {"-l", "--loop"}, arity = "0..1", description = "是否生成循环", interactive = true, echo = true)
-    private boolean loop = false;
-
     // 添加@ArgGroup类，用于标记分组
     @ArgGroup(exclusive = false, heading = "核心模板%n")
     MainTemplate mainTemplate;
+    @Option(names = {"-n", "--needGit"}, arity = "0..1", description = "是否生成 .gitignore文件", interactive = true, echo = true)
+    private boolean needGit = true;
+    @Option(names = {"-l", "--loop"}, arity = "0..1", description = "是否生成循环", interactive = true, echo = true)
+    private boolean loop = false;
+
+    // main方法写调用逻辑
+    public static void main(String[] args) {
+        CommandLine commandLine = new CommandLine(TestArgGroupCommad.class);
+//        commandLine.execute("-l", "-mainTemplate.a", "--mainTemplate.outputText");
+        commandLine.execute("--help");
+    }
 
     // run方法打印属性值
     @Override
@@ -36,12 +41,5 @@ public class TestArgGroupCommad implements Runnable {
 
         @Option(names = {"-mainTemplate.o", "--mainTemplate.outputText"}, arity = "0..1", description = "输出信息", interactive = true, echo = true)
         private String outputText = "sum = ";
-    }
-
-    // main方法写调用逻辑
-    public static void main(String[] args) {
-        CommandLine commandLine = new CommandLine(TestArgGroupCommad.class);
-//        commandLine.execute("-l", "-mainTemplate.a", "--mainTemplate.outputText");
-        commandLine.execute("--help");
     }
 }

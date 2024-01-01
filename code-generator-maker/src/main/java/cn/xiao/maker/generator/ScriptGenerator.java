@@ -13,7 +13,7 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 /**
- * mvn 脚本文件
+ * 生成 git初始化 mvn打包 脚本文件
  *
  * @author xiao
  */
