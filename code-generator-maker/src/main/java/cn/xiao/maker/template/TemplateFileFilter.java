@@ -2,7 +2,7 @@ package cn.xiao.maker.template;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.xiao.maker.template.enums.FileFilterRangeEnum;
 import cn.xiao.maker.template.enums.FileFilterRuleEnum;
 import cn.xiao.maker.template.model.FileFilterConfig;
@@ -47,16 +47,16 @@ public class TemplateFileFilter {
      */
     public static boolean doSingleFilter(List<FileFilterConfig> filterConfigList, File file) {
         // Check if the file exists
-        if (!FileUtil.exist(file)) {
-            return false;
-        }
+        // if (!FileUtil.exist(file)) {
+        //     return false;
+        // }
         // Get the file name and content
         String fileName = file.getName();
         String fileContent = FileUtil.readUtf8String(file);
 
         // Check if the filter configuration list is empty
         if (CollUtil.isEmpty(filterConfigList)) {
-            return false;
+            return true;
         }
         // Iterate through the filter configuration list
         for (FileFilterConfig fileFilterConfig : filterConfigList) {
@@ -65,7 +65,7 @@ public class TemplateFileFilter {
             String rule = fileFilterConfig.getRule();
             String value = fileFilterConfig.getValue();
             // Check if the range, rule, and value are empty
-            if (StrUtil.hasBlank(range, rule, value)) {
+            if (CharSequenceUtil.hasBlank(range, rule, value)) {
                 continue;
             }
             // Get the filter range enum and filter rule enum from the range and rule
