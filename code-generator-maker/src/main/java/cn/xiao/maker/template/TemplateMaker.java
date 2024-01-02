@@ -123,7 +123,7 @@ public class TemplateMaker {
         }
 
         // 3生成配置文件
-        String metaOutPath = sourceRootPath + File.separator + "meta.json";
+        String metaOutPath = templateDirPath + File.separator + "meta.json";
 
         if (FileUtil.exist(metaOutPath)) {
             newMeta = JSONUtil.toBean(FileUtil.readUtf8String(metaOutPath), Meta.class);

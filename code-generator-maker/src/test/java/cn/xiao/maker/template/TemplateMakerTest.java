@@ -158,10 +158,10 @@ public class TemplateMakerTest {
         String projectPath = System.getProperty("user.dir");
         String originProjectPath = new File(projectPath).getParent() + File.separator + "code-generator-template/springboot-init-template";
         // 文件参数配置，扫描目录
-        String inputFilePath1 = "src/main/java/cn/xiao/springbootinit/common";
+        String inputFilePath = "./";
         TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
         TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
-        fileInfoConfig1.setPath(inputFilePath1);
+        fileInfoConfig1.setPath(inputFilePath);
         templateMakerFileConfig.setFileInfoConfigList(Collections.singletonList(fileInfoConfig1));
         // 模型参数配置
         TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();
