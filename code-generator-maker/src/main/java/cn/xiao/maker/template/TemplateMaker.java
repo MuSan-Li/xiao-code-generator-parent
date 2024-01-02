@@ -200,8 +200,8 @@ public class TemplateMaker {
 
         // 文件参数信息
         Meta.FileConfigDTO.FilesDTO filesDTO = new Meta.FileConfigDTO.FilesDTO();
-        filesDTO.setInputPath(fileInputPath);
-        filesDTO.setOutputPath(fileOutputPath);
+        filesDTO.setInputPath(fileOutputPath);
+        filesDTO.setOutputPath(fileInputPath);
         filesDTO.setType(FileTypeEnum.FILE.getValue());
         filesDTO.setGenerateType(FileGenerateTypeEnum.DYNAMIC.getValue());
 
@@ -210,7 +210,7 @@ public class TemplateMaker {
         if (!existFile) {
             // 修改的文件内容和原文件一样 为静态文件否则动态文件
             if (contentEquals) {
-                filesDTO.setOutputPath(fileInputPath);
+                filesDTO.setInputPath(fileInputPath);
                 filesDTO.setGenerateType(FileGenerateTypeEnum.STATIC.getValue());
             } else {
                 FileUtil.writeUtf8String(newFileContent, fileOutputAbsolutePath);
@@ -242,7 +242,7 @@ public class TemplateMaker {
             List<Meta.FileConfigDTO.FilesDTO> tempFileConfigDtoList = entry.getValue();
             List<Meta.FileConfigDTO.FilesDTO> newFileList = new ArrayList<>(tempFileConfigDtoList.stream()
                     .flatMap(item -> item.getFiles().stream())
-                    .collect(Collectors.toMap(Meta.FileConfigDTO.FilesDTO::getInputPath, m -> m, (o, n) -> n)).values());
+                    .collect(Collectors.toMap(Meta.FileConfigDTO.FilesDTO::getOutputPath, m -> m, (o, n) -> n)).values());
             Meta.FileConfigDTO.FilesDTO filesDTO = CollUtil.getLast(tempFileConfigDtoList);
             filesDTO.setFiles(newFileList);
             String groupKey = entry.getKey();
@@ -256,7 +256,7 @@ public class TemplateMaker {
 
         resultList.addAll(noGroupFileInfoList.stream()
                 .collect(Collectors.toMap(
-                        Meta.FileConfigDTO.FilesDTO::getInputPath, Function.identity(), (o, n) -> n)
+                        Meta.FileConfigDTO.FilesDTO::getOutputPath, Function.identity(), (o, n) -> n)
                 ).values());
         return resultList;
     }
