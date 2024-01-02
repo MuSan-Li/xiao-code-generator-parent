@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class TemplateMakerFileConfig implements Serializable {
 
-    private List<FileInfoConfig> fileInfoConfigList;
+    private List<FileInfoConfig> files;
 
     private FileGroupConfig fileGroupConfig;
 

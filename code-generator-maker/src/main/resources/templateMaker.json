@@ -1,0 +1,24 @@
+{
+  "meta": {
+    "name": "acm-template-pro-generator",
+    "description": "ACM 示例模板生成器"
+  },
+  "originProjectPath": "D:/Project/xiao-code-generator-parent/code-generator-template/springboot-init-template",
+  "fileConfig": {
+    "files": [
+      {
+        "path": "src/main/java/cn/xiao/springbootinit/common"
+      }
+    ]
+  },
+  "modelConfig": {
+    "models": [
+      {
+        "fieldName": "className",
+        "type": "String",
+        "defaultValue": true,
+        "replaceText": "BaseResponse"
+      }
+    ]
+  }
+}

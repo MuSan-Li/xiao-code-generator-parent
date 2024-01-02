@@ -1,14 +1,16 @@
 package cn.xiao.maker.template;
 
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.meta.Meta;
 import cn.xiao.maker.template.model.FileFilterConfig;
+import cn.xiao.maker.template.model.TemplateMakerConfig;
 import cn.xiao.maker.template.model.TemplateMakerFileConfig;
 import cn.xiao.maker.template.model.TemplateMakerModelConfig;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -102,6 +104,9 @@ public class TemplateMakerTest {
     //     System.out.println("============= success =============");
     // }
 
+    /**
+     * 测试 Bug-1
+     */
     @Test
     public void testMakeTemplateBug1() {
 
@@ -128,7 +133,7 @@ public class TemplateMakerTest {
         config.setPath(fileInputPath);
 
         fileInfoConfigList.add(config);
-        templateMakerFileConfig.setFileInfoConfigList(fileInfoConfigList);
+        templateMakerFileConfig.setFiles(fileInfoConfigList);
 
         // 模型参数配置
         TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();
@@ -148,7 +153,7 @@ public class TemplateMakerTest {
 
 
     /**
-     * 同文件目录多次生成时，会扫描新的 FTL 文件
+     * 测试 Bug-2
      */
     @Test
     public void testMakeTemplateBug2() {
@@ -162,7 +167,7 @@ public class TemplateMakerTest {
         TemplateMakerFileConfig templateMakerFileConfig = new TemplateMakerFileConfig();
         TemplateMakerFileConfig.FileInfoConfig fileInfoConfig1 = new TemplateMakerFileConfig.FileInfoConfig();
         fileInfoConfig1.setPath(inputFilePath);
-        templateMakerFileConfig.setFileInfoConfigList(Collections.singletonList(fileInfoConfig1));
+        templateMakerFileConfig.setFiles(Collections.singletonList(fileInfoConfig1));
         // 模型参数配置
         TemplateMakerModelConfig templateMakerModelConfig = new TemplateMakerModelConfig();
         TemplateMakerModelConfig.ModelInfoConfig modelInfoConfig = new TemplateMakerModelConfig.ModelInfoConfig();
@@ -172,6 +177,17 @@ public class TemplateMakerTest {
         List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = Collections.singletonList(modelInfoConfig);
         templateMakerModelConfig.setModels(modelInfoConfigList);
         long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1735281524670181376L);
+        System.out.println(id);
+    }
+
+    /**
+     * 测试制作模板
+     */
+    @Test
+    public void testMakeTemplate() {
+        String templateMakerJsonStr = ResourceUtil.readUtf8Str("templateMaker.json");
+        TemplateMakerConfig templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+        long id = TemplateMaker.makeTemplate(templateMakerConfig);
         System.out.println(id);
     }
 }

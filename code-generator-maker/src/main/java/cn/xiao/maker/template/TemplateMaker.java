@@ -9,6 +9,7 @@ import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.meta.Meta;
 import cn.xiao.maker.meta.enums.FileGenerateTypeEnum;
 import cn.xiao.maker.meta.enums.FileTypeEnum;
+import cn.xiao.maker.template.model.TemplateMakerConfig;
 import cn.xiao.maker.template.model.TemplateMakerFileConfig;
 import cn.xiao.maker.template.model.TemplateMakerModelConfig;
 
@@ -31,6 +32,32 @@ public class TemplateMaker {
     private TemplateMaker() {
     }
 
+
+    /**
+     * 模板制作
+     *
+     * @param templateMakerConfig
+     * @return
+     */
+    public static long makeTemplate(TemplateMakerConfig templateMakerConfig) {
+        Long id = templateMakerConfig.getId();
+        Meta meta = templateMakerConfig.getMeta();
+        String originProjectPath = templateMakerConfig.getOriginProjectPath();
+        TemplateMakerFileConfig fileConfig = templateMakerConfig.getFileConfig();
+        TemplateMakerModelConfig modelConfig = templateMakerConfig.getModelConfig();
+        return makeTemplate(meta, originProjectPath, fileConfig, modelConfig, id);
+    }
+
+    /**
+     * 模板制作
+     *
+     * @param newMeta
+     * @param originRootPath
+     * @param templateMakerFileConfig
+     * @param templateMakerModelConfig
+     * @param id
+     * @return
+     */
     public static long makeTemplate(Meta newMeta, String originRootPath,
                                     TemplateMakerFileConfig templateMakerFileConfig,
                                     TemplateMakerModelConfig templateMakerModelConfig, Long id) {
@@ -58,7 +85,7 @@ public class TemplateMaker {
         String sourceRootPath = templateDirPath + File.separator + originLastFileName;
         // win 路径转义
         sourceRootPath = sourceRootPath.replaceAll("\\\\", "/");
-        List<TemplateMakerFileConfig.FileInfoConfig> fileList = templateMakerFileConfig.getFileInfoConfigList();
+        List<TemplateMakerFileConfig.FileInfoConfig> fileList = templateMakerFileConfig.getFiles();
 
         List<Meta.FileConfigDTO.FilesDTO> newFilesDTOList = new ArrayList<>();
         for (TemplateMakerFileConfig.FileInfoConfig fileInfoConfig : fileList) {
