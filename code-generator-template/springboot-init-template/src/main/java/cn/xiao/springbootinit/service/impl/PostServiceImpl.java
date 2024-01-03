@@ -5,14 +5,10 @@ import cn.xiao.springbootinit.common.ErrorCode;
 import cn.xiao.springbootinit.constant.CommonConstant;
 import cn.xiao.springbootinit.exception.BusinessException;
 import cn.xiao.springbootinit.exception.ThrowUtils;
-import cn.xiao.springbootinit.mapper.PostFavourMapper;
 import cn.xiao.springbootinit.mapper.PostMapper;
-import cn.xiao.springbootinit.mapper.PostThumbMapper;
 import cn.xiao.springbootinit.model.dto.post.PostEsDTO;
 import cn.xiao.springbootinit.model.dto.post.PostQueryRequest;
 import cn.xiao.springbootinit.model.entity.Post;
-import cn.xiao.springbootinit.model.entity.PostFavour;
-import cn.xiao.springbootinit.model.entity.PostThumb;
 import cn.xiao.springbootinit.model.entity.User;
 import cn.xiao.springbootinit.model.vo.PostVO;
 import cn.xiao.springbootinit.model.vo.UserVO;
@@ -60,12 +56,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
 
     @Resource
     private UserService userService;
-
-    @Resource
-    private PostThumbMapper postThumbMapper;
-
-    @Resource
-    private PostFavourMapper postFavourMapper;
 
     @Resource
     private ElasticsearchRestTemplate elasticsearchRestTemplate;
@@ -243,20 +233,7 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         postVO.setUser(userVO);
         // 2. 已登录，获取用户点赞、收藏状态
         User loginUser = userService.getLoginUserPermitNull(request);
-        if (ObjectUtil.isNotEmpty(loginUser)) {
-            // 获取点赞
-            LambdaQueryWrapper<PostThumb> postThumbQueryWrapper = Wrappers.lambdaQuery();
-            postThumbQueryWrapper.in(PostThumb::getPostId, postId);
-            postThumbQueryWrapper.eq(PostThumb::getUserId, loginUser.getId());
-            PostThumb postThumb = postThumbMapper.selectOne(postThumbQueryWrapper);
-            postVO.setHasThumb(ObjectUtil.isNotEmpty(postThumb));
-            // 获取收藏
-            LambdaQueryWrapper<PostFavour> postFavourQueryWrapper = Wrappers.lambdaQuery();
-            postFavourQueryWrapper.in(PostFavour::getPostId, postId);
-            postFavourQueryWrapper.eq(PostFavour::getUserId, loginUser.getId());
-            PostFavour postFavour = postFavourMapper.selectOne(postFavourQueryWrapper);
-            postVO.setHasFavour(ObjectUtil.isNotEmpty(postFavour));
-        }
+        ObjectUtil.isNotEmpty(loginUser);
         return postVO;
     }
 
@@ -271,26 +248,8 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
         Set<Long> userIdSet = postList.stream().map(Post::getUserId).collect(Collectors.toSet());
         Map<Long, List<User>> userIdUserListMap = userService.listByIds(userIdSet).stream()
                 .collect(Collectors.groupingBy(User::getId));
-        // 2. 已登录，获取用户点赞、收藏状态
-        Map<Long, Boolean> postIdHasThumbMap = new HashMap<>();
-        Map<Long, Boolean> postIdHasFavourMap = new HashMap<>();
         User loginUser = userService.getLoginUserPermitNull(request);
-        if (ObjectUtil.isNotEmpty(loginUser)) {
-            Set<Long> postIdSet = postList.stream().map(Post::getId).collect(Collectors.toSet());
-            loginUser = userService.getLoginUser(request);
-            // 获取点赞
-            LambdaQueryWrapper<PostThumb> postThumbQueryWrapper = Wrappers.lambdaQuery();
-            postThumbQueryWrapper.in(PostThumb::getPostId, postIdSet);
-            postThumbQueryWrapper.eq(PostThumb::getUserId, loginUser.getId());
-            List<PostThumb> postPostThumbList = postThumbMapper.selectList(postThumbQueryWrapper);
-            postPostThumbList.forEach(postPostThumb -> postIdHasThumbMap.put(postPostThumb.getPostId(), true));
-            // 获取收藏
-            LambdaQueryWrapper<PostFavour> postFavourQueryWrapper = Wrappers.lambdaQuery();
-            postFavourQueryWrapper.in(PostFavour::getPostId, postIdSet);
-            postFavourQueryWrapper.eq(PostFavour::getUserId, loginUser.getId());
-            List<PostFavour> postFavourList = postFavourMapper.selectList(postFavourQueryWrapper);
-            postFavourList.forEach(postFavour -> postIdHasFavourMap.put(postFavour.getPostId(), true));
-        }
+        ObjectUtil.isNotEmpty(loginUser);
         // 填充信息
         List<PostVO> postVOList = postList.stream().map(post -> {
             PostVO postVO = ConvertUtils.convert(post, PostVO.class);
@@ -300,8 +259,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, Post> implements Po
                 user = userIdUserListMap.get(userId).get(0);
             }
             postVO.setUser(userService.getUserVO(user));
-            postVO.setHasThumb(postIdHasThumbMap.getOrDefault(post.getId(), false));
-            postVO.setHasFavour(postIdHasFavourMap.getOrDefault(post.getId(), false));
             return postVO;
         }).collect(Collectors.toList());
         postVOPage.setRecords(postVOList);

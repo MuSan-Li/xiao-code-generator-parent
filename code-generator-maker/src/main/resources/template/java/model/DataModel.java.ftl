@@ -21,7 +21,7 @@ public class DataModel {
 
 <#list modelConfig.models as modelInfo>
 
-<#-- 有分组 -->
+    <#-- 有分组 -->
     <#if modelInfo.groupKey??>
         /**
         * ${modelInfo.groupName}

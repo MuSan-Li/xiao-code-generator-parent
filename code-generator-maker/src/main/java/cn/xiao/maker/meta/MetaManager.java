@@ -43,7 +43,8 @@ public class MetaManager {
 
 
     private static Meta initMetaObject() {
-        String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
+        // String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
+        String metaJson = ResourceUtil.readUtf8Str("spring-boot-init-meta.json");
         Meta meta = JSONUtil.toBean(metaJson, Meta.class);
         // 校验meta对象
         MetaValidator.doValidaAndFill(meta);

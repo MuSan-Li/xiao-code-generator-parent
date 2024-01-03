@@ -2,18 +2,20 @@ package cn.xiao.maker.generator.main;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
-import cn.hutool.core.text.StrPool;
 import cn.hutool.core.util.StrUtil;
 import cn.xiao.maker.generator.JarGenerator;
 import cn.xiao.maker.generator.ScriptGenerator;
 import cn.xiao.maker.generator.file.DynamicFileGenerator;
 import cn.xiao.maker.generator.file.StaticFileGenerator;
 import cn.xiao.maker.meta.Meta;
+import cn.xiao.maker.meta.Meta.FileConfigDTO.FilesDTO;
 import cn.xiao.maker.meta.MetaManager;
+import cn.xiao.maker.meta.enums.FileGenerateTypeEnum;
 import freemarker.template.TemplateException;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * 生成模板主类
@@ -32,7 +34,7 @@ public abstract class GenerateTemplate {
     private static String copySource(Meta meta, String outputPath) {
         String sourceRootPath = meta.getFileConfig().getSourceRootPath();
         String destSourcePath = outputPath + File.separator + new File(meta.getFileConfig().getInputRootPath()).getParent();
-        FileUtil.copy(sourceRootPath, destSourcePath, true);
+        FileUtil.copy(sourceRootPath, destSourcePath, false);
         return destSourcePath;
     }
 
@@ -63,48 +65,47 @@ public abstract class GenerateTemplate {
 
         // 输出根路径
         String projectProperty = System.getProperty("user.dir");
-        String outputPath = projectProperty + File.separator +
+        String rootPath = projectProperty + File.separator +
                 meta.getFileConfig().getOutputRootPath() + File.separator + meta.getName();
 
-        if (!FileUtil.exist(outputPath)) {
-            FileUtil.mkdir(outputPath);
+        if (!FileUtil.exist(rootPath)) {
+            FileUtil.mkdir(rootPath);
         }
 
-        // Java包基础路径
-        String outputBasePackagePath = StrUtil.join(StrPool.SLASH, StrUtil.split(meta.getBasePackage(), StrPool.DOT));
-        String outputBaseJavaPackagePath = outputPath + File.separator + "src/main/java/" + outputBasePackagePath;
+        // 复制原始文件模板文件到.source路径下
+        String destSourcePath = copySource(meta, rootPath);
 
         // 生成代码
-        generateCode(outputBaseJavaPackagePath, meta, outputPath);
+        generateCode(meta, rootPath);
 
         // 构建jar包
-        JarGenerator.doGenerate(outputPath);
-
-        // 复制原始文件模板文件到.source路径下
-        String destSourcePath = copySource(meta, outputPath);
+        JarGenerator.doGenerate(rootPath);
 
         // 生成script文件
-        String jarName = buildScript(meta, outputPath);
+        String jarName = buildScript(meta, rootPath);
 
         // 制作精简代码包
-        buildDist(outputPath, jarName, destSourcePath);
+        buildDist(rootPath, jarName, destSourcePath);
     }
 
     /**
      * 生成文件
      *
-     * @param outputBaseJavaPackagePath
      * @param meta
      * @param outputPath
      * @throws IOException
      * @throws TemplateException
      */
-    protected void generateCode(String outputBaseJavaPackagePath,
-                                Meta meta, String outputPath) throws IOException, TemplateException {
+    protected void generateCode(Meta meta, String outputPath) throws Exception {
 
         // 读取resource目录
         ClassPathResource classPathResource = new ClassPathResource("");
         String inputResourcePath = classPathResource.getAbsolutePath();
+
+        // Java 包基础路径
+        String outputBasePackage = meta.getBasePackage();
+        String outputBasePackagePath = StrUtil.join("/", StrUtil.split(outputBasePackage, "."));
+        String outputBaseJavaPackagePath = outputPath + File.separator + "src/main/java/" + outputBasePackagePath;
 
         String inputFilePath;
         String outputFilePath;
@@ -161,17 +162,45 @@ public abstract class GenerateTemplate {
         inputFilePath = inputResourcePath + File.separator + "template/pom.xml.ftl";
         outputFilePath = outputPath + File.separator + "pom.xml";
         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
-
-        // gitignore
-        inputFilePath = inputResourcePath + File.separator + "template/.gitignore";
-        outputFilePath = outputPath + File.separator + ".gitignore";
-        StaticFileGenerator.doGenerate(inputFilePath, outputFilePath);
-
-        // 生成README.md文件
-        inputFilePath = inputResourcePath + File.separator + "template/README.md.ftl";
-        outputFilePath = outputPath + File.separator + "README.md";
-        DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
     }
+
+    // /**
+    //  * 生成文件
+    //  *
+    //  * @param rootPath
+    //  * @param meta
+    //  * @throws IOException
+    //  * @throws TemplateException
+    //  */
+    // protected void generateCode(String rootPath,
+    //                             Meta meta) throws Exception {
+    //     List<FilesDTO> filesDTOList = new ArrayList<>();
+    //
+    //     List<FilesDTO> filesDTOS = meta.getFileConfig().getFiles();
+    //     if (CollUtil.isNotEmpty(filesDTOS)) {
+    //         Set<FilesDTO> filesDTOSet = filesDTOS.stream()
+    //                 .filter(item -> StrUtil.isBlank(item.getGroupKey()))
+    //                 .collect(Collectors.toSet());
+    //         filesDTOS.stream()
+    //                 .filter(item -> StrUtil.isNotBlank(item.getGroupKey()))
+    //                 .flatMap(item -> item.getFiles().stream())
+    //                 .forEach(filesDTOSet::add);
+    //         filesDTOList = new ArrayList<>(filesDTOSet);
+    //     }
+    //
+    //     for (FilesDTO filesDTO : filesDTOList) {
+    //         // 生成文件
+    //         String inputFilePath = rootPath + File.separator + filesDTO.getInputPath();
+    //         String outputFilePath = rootPath + File.separator + filesDTO.getOutputPath();
+    //         String generateType = filesDTO.getGenerateType();
+    //         FileGenerateTypeEnum generateTypeEnum = FileGenerateTypeEnum.getEnumByValue(generateType);
+    //         if (Objects.equals(FileGenerateTypeEnum.STATIC, generateTypeEnum)) {
+    //             StaticFileGenerator.doGenerate(inputFilePath, outputFilePath);
+    //             continue;
+    //         }
+    //         DynamicFileGenerator.doGenerate(inputFilePath, outputFilePath, meta);
+    //     }
+    // }
 
     /**
      * 制作精简代码包
