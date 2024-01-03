@@ -203,18 +203,13 @@ public class TemplateMakerTest {
         long id = TemplateMaker.makeTemplate(templateMakerConfig);
         System.out.println(id);
         int index = 1;
-        boolean isGenerate = true;
-        while (isGenerate) {
+        while (true) {
             try {
                 System.out.println("index = " + index);
                 templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-" + index + ".json");
-                if (StrUtil.isBlank(templateMakerJsonStr)) {
-                    isGenerate = false;
-                } else {
-                    templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
-                    TemplateMaker.makeTemplate(templateMakerConfig);
-                    index++;
-                }
+                templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+                TemplateMaker.makeTemplate(templateMakerConfig);
+                index++;
             } catch (Exception e) {
                 System.out.println("生成模板失败，请检查模板配置");
                 return;
