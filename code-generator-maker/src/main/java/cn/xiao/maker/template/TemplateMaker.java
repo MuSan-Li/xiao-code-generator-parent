@@ -14,6 +14,7 @@ import cn.xiao.maker.meta.enums.FileTypeEnum;
 import cn.xiao.maker.template.model.TemplateMakerConfig;
 import cn.xiao.maker.template.model.TemplateMakerFileConfig;
 import cn.xiao.maker.template.model.TemplateMakerModelConfig;
+import cn.xiao.maker.template.model.TemplateMakerOutputConfig;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -47,7 +48,8 @@ public class TemplateMaker {
         String originProjectPath = templateMakerConfig.getOriginProjectPath();
         TemplateMakerFileConfig fileConfig = templateMakerConfig.getFileConfig();
         TemplateMakerModelConfig modelConfig = templateMakerConfig.getModelConfig();
-        return makeTemplate(meta, originProjectPath, fileConfig, modelConfig, id);
+        TemplateMakerOutputConfig outputConfig = templateMakerConfig.getOutputConfig();
+        return makeTemplate(meta, originProjectPath, fileConfig, modelConfig, outputConfig, id);
     }
 
     /**
@@ -55,14 +57,15 @@ public class TemplateMaker {
      *
      * @param newMeta
      * @param originRootPath
-     * @param templateMakerFileConfig
-     * @param templateMakerModelConfig
+     * @param fileConfig
+     * @param modelConfig
+     * @param outputConfig
      * @param id
      * @return
      */
-    public static long makeTemplate(Meta newMeta, String originRootPath,
-                                    TemplateMakerFileConfig templateMakerFileConfig,
-                                    TemplateMakerModelConfig templateMakerModelConfig, Long id) {
+    public static long makeTemplate(Meta newMeta, String originRootPath, TemplateMakerFileConfig fileConfig,
+                                    TemplateMakerModelConfig modelConfig, TemplateMakerOutputConfig outputConfig,
+                                    Long id) {
         // id为空则直生成
         if (Objects.isNull(id)) {
             id = IdUtil.getSnowflakeNextId();
@@ -71,29 +74,35 @@ public class TemplateMaker {
         // 1.输入信息
         // 1.1输入文件信息
         String projectPath = System.getProperty(CommonConstant.USER_DIR);
-        String originLastFileName = new File(originRootPath).getName();
 
         // 1.2复制原始模板到工作空间
-        String workSpace = CommonConstant.WORK_SPACE;
-        String tempDirPath = projectPath + File.separator + workSpace;
         // String templateDirPath = tempDirPath + File.separator + originLastFileName + StrPool.DASHED + id;
-        String templateDirPath = tempDirPath + File.separator + id;
+        String templateDirPath = projectPath + File.separator + CommonConstant.WORK_SPACE + File.separator + id;
         if (!FileUtil.exist(templateDirPath)) {
             FileUtil.mkdir(templateDirPath);
             FileUtil.copy(originRootPath, templateDirPath, true);
         }
 
         //源模版项目根目录
-        String sourceRootPath = templateDirPath + File.separator + originLastFileName;
+        // 处理多次输入 originRootPath 为空场景
+        String sourceRootPath = FileUtil.loopFiles(new File(templateDirPath), 1, null)
+                .stream()
+                .filter(File::isDirectory)
+                .findFirst()
+                .orElseThrow(RuntimeException::new)
+                .getAbsolutePath();
+
         // win 路径转义
-        sourceRootPath = sourceRootPath.replaceAll("\\\\", StrPool.SLASH);
+        sourceRootPath = sourceRootPath.replaceAll(CommonConstant.BACK_SLASH, StrPool.SLASH);
 
         // 处理文件信息
-        List<Meta.FileConfigDTO.FilesDTO> newFilesDTOList = makeFileTemplates(templateMakerFileConfig,
-                templateMakerModelConfig, sourceRootPath);
+        List<Meta.FileConfigDTO.FilesDTO> newFilesDTOList = makeFileTemplates(fileConfig,
+                modelConfig, sourceRootPath);
+
+        //
 
         // 处理模型信息
-        List<Meta.ModelConfigDTO.ModelsDTO> newModelsDTOList = getModelInfoList(templateMakerModelConfig);
+        List<Meta.ModelConfigDTO.ModelsDTO> newModelsDTOList = getModelInfoList(modelConfig);
 
         // 生成配置文件
         String metaOutPath = templateDirPath + File.separator + CommonConstant.META_NAME;
@@ -109,22 +118,21 @@ public class TemplateMaker {
             // 去重配置
             newMeta.getFileConfig().setFiles(distinctFile(filesDTOList));
             newMeta.getModelConfig().setModels(distinctModel(modelsDTOList));
+        } else {
+            Meta.FileConfigDTO fileConfigDTO = new Meta.FileConfigDTO();
+            fileConfigDTO.setSourceRootPath(sourceRootPath);
 
-            FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutPath);
-            return id;
+            // 3.1构造file配置参数
+            fileConfigDTO.setFiles(newFilesDTOList);
+            newMeta.setFileConfig(fileConfigDTO);
+
+            // 3.2构造model配置参数
+            Meta.ModelConfigDTO modelConfigDTO = new Meta.ModelConfigDTO();
+            modelConfigDTO.setModels(newModelsDTOList);
+            newMeta.setModelConfig(modelConfigDTO);
         }
 
-        Meta.FileConfigDTO fileConfigDTO = new Meta.FileConfigDTO();
-        fileConfigDTO.setSourceRootPath(sourceRootPath);
-
-        // 3.1构造file配置参数
-        fileConfigDTO.setFiles(newFilesDTOList);
-        newMeta.setFileConfig(fileConfigDTO);
-
-        // 3.2构造model配置参数
-        Meta.ModelConfigDTO modelConfigDTO = new Meta.ModelConfigDTO();
-        modelConfigDTO.setModels(newModelsDTOList);
-        newMeta.setModelConfig(modelConfigDTO);
+        removeFileFormRoot(outputConfig, newMeta);
 
         // 3.3创建元信息文件
         FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutPath);
@@ -132,20 +140,36 @@ public class TemplateMaker {
     }
 
     /**
+     * 从未分组文件中移除组内的同名文件
+     *
+     * @param outputConfig
+     * @param newMeta
+     */
+    private static void removeFileFormRoot(TemplateMakerOutputConfig outputConfig, Meta newMeta) {
+        if (Objects.isNull(outputConfig)) {
+            return;
+        }
+        if (!outputConfig.isRemoveGroupFilesFromRoot()) {
+            return;
+        }
+        List<Meta.FileConfigDTO.FilesDTO> filesDTOList = newMeta.getFileConfig().getFiles();
+        newMeta.getFileConfig().setFiles(TemplateMakerUtils.removeGroupFilesFormRoot(filesDTOList));
+    }
+
+    /**
      * 处理模型信息
      *
-     * @param templateMakerModelConfig
+     * @param modelConfig
      * @return
      */
-    private static List<Meta.ModelConfigDTO.ModelsDTO> getModelInfoList(
-            TemplateMakerModelConfig templateMakerModelConfig) {
+    private static List<Meta.ModelConfigDTO.ModelsDTO> getModelInfoList(TemplateMakerModelConfig modelConfig) {
 
         // 结果集合
         List<Meta.ModelConfigDTO.ModelsDTO> newModelsDTOList = new ArrayList<>();
-        if (Objects.isNull(templateMakerModelConfig)) {
+        if (Objects.isNull(modelConfig)) {
             return newModelsDTOList;
         }
-        List<TemplateMakerModelConfig.ModelInfoConfig> models = templateMakerModelConfig.getModels();
+        List<TemplateMakerModelConfig.ModelInfoConfig> models = modelConfig.getModels();
 
         if (CollUtil.isEmpty(models)) {
             return newModelsDTOList;
@@ -159,7 +183,7 @@ public class TemplateMaker {
         }).collect(Collectors.toList());
 
 
-        TemplateMakerModelConfig.ModelGroupConfig modelGroupConfig = templateMakerModelConfig.getModelGroupConfig();
+        TemplateMakerModelConfig.ModelGroupConfig modelGroupConfig = modelConfig.getModelGroupConfig();
 
         // 如果是模型组 全放到一个分组内
         if (Objects.nonNull(modelGroupConfig)) {
@@ -182,22 +206,22 @@ public class TemplateMaker {
     /**
      * 处理文件信息
      *
-     * @param templateMakerFileConfig
-     * @param templateMakerModelConfig
+     * @param fileConfig
+     * @param modelConfig
      * @param sourceRootPath
      * @return
      */
-    private static List<Meta.FileConfigDTO.FilesDTO> makeFileTemplates(
-            TemplateMakerFileConfig templateMakerFileConfig, TemplateMakerModelConfig templateMakerModelConfig,
-            String sourceRootPath) {
+    private static List<Meta.FileConfigDTO.FilesDTO> makeFileTemplates(TemplateMakerFileConfig fileConfig,
+                                                                       TemplateMakerModelConfig modelConfig,
+                                                                       String sourceRootPath) {
 
         List<Meta.FileConfigDTO.FilesDTO> newFilesDTOList = new ArrayList<>();
 
-        if (Objects.isNull(templateMakerFileConfig)) {
+        if (Objects.isNull(fileConfig)) {
             return newFilesDTOList;
         }
 
-        List<TemplateMakerFileConfig.FileInfoConfig> fileList = templateMakerFileConfig.getFiles();
+        List<TemplateMakerFileConfig.FileInfoConfig> fileList = fileConfig.getFiles();
 
         if (CollUtil.isEmpty(fileList)) {
             return newFilesDTOList;
@@ -217,10 +241,10 @@ public class TemplateMaker {
                     .filter(item -> !item.getAbsolutePath().endsWith(CommonConstant.MODEL_END_WITH))
                     .collect(Collectors.toList());
             for (File file : files) {
-                newFilesDTOList.add(makeFileTemplate(sourceRootPath, file, templateMakerModelConfig));
+                newFilesDTOList.add(makeFileTemplate(sourceRootPath, file, modelConfig));
             }
         }
-        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = templateMakerFileConfig.getFileGroupConfig();
+        TemplateMakerFileConfig.FileGroupConfig fileGroupConfig = fileConfig.getFileGroupConfig();
 
         if (Objects.nonNull(fileGroupConfig)) {
             Meta.FileConfigDTO.FilesDTO fileConfigDTO = getFilesDTO(fileGroupConfig, newFilesDTOList);
@@ -256,27 +280,27 @@ public class TemplateMaker {
      *
      * @param sourceRootPath
      * @param inputFile
-     * @param templateMakerModelConfig
+     * @param modelConfig
      * @return
      */
     private static Meta.FileConfigDTO.FilesDTO makeFileTemplate(String sourceRootPath, File inputFile,
-                                                                TemplateMakerModelConfig templateMakerModelConfig) {
+                                                                TemplateMakerModelConfig modelConfig) {
         // 举例：D:\Project\xiao-code-generator-parent\code-generator-maker\src\main\java\cn\xiao\xxx
         // win系统对路径转义
-        String fileInputAbsolutePath = inputFile.getAbsolutePath().replaceAll("\\\\", StrPool.SLASH);
+        String fileInputAbsolutePath = inputFile.getAbsolutePath().replaceAll(CommonConstant.BACK_SLASH, StrPool.SLASH);
         String fileOutputAbsolutePath = fileInputAbsolutePath + CommonConstant.MODEL_END_WITH;
 
         // 举例：src/main/java/cn/xiao/xxx
         // 文件输入输出替换为相对路径
-        String fileInputPath = fileInputAbsolutePath.replace(sourceRootPath + StrPool.SLASH, "");
+        String fileInputPath = fileInputAbsolutePath.replace(sourceRootPath + StrPool.SLASH, CommonConstant.BLANK);
         String fileOutputPath = fileInputPath + CommonConstant.MODEL_END_WITH;
 
         boolean existFile = FileUtil.exist(fileOutputAbsolutePath);
         String fileContent = FileUtil.readUtf8String(existFile ? fileOutputAbsolutePath : fileInputAbsolutePath);
         String replacement;
         String newFileContent = fileContent;
-        TemplateMakerModelConfig.ModelGroupConfig modelGroupConfig = templateMakerModelConfig.getModelGroupConfig();
-        List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = templateMakerModelConfig.getModels();
+        TemplateMakerModelConfig.ModelGroupConfig modelGroupConfig = modelConfig.getModelGroupConfig();
+        List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = modelConfig.getModels();
 
         for (TemplateMakerModelConfig.ModelInfoConfig modelInfoConfig : modelInfoConfigList) {
             // 不是分组
@@ -361,10 +385,9 @@ public class TemplateMaker {
      *
      * @return
      */
-    private static List<Meta.ModelConfigDTO.ModelsDTO> distinctModel(List<Meta.ModelConfigDTO.ModelsDTO>
-                                                                             modelsDTOList) {
+    private static List<Meta.ModelConfigDTO.ModelsDTO> distinctModel(List<Meta.ModelConfigDTO.ModelsDTO> modelsDTOS) {
         // 策略：同分组内文件 merge，不同分组保留
-        Map<String, List<Meta.ModelConfigDTO.ModelsDTO>> groupKeyFileInfoListMap = modelsDTOList.stream()
+        Map<String, List<Meta.ModelConfigDTO.ModelsDTO>> groupKeyFileInfoListMap = modelsDTOS.stream()
                 .filter(item -> CharSequenceUtil.isNotBlank(item.getGroupKey()))
                 .collect(Collectors.groupingBy(Meta.ModelConfigDTO.ModelsDTO::getGroupKey));
 
@@ -386,7 +409,7 @@ public class TemplateMaker {
 
         List<Meta.ModelConfigDTO.ModelsDTO> resultList = new ArrayList<>(groupKeyMergedFileInfoMap.values());
 
-        List<Meta.ModelConfigDTO.ModelsDTO> noGroupFileInfoList = modelsDTOList.stream()
+        List<Meta.ModelConfigDTO.ModelsDTO> noGroupFileInfoList = modelsDTOS.stream()
                 .filter(item -> CharSequenceUtil.isBlank(item.getGroupKey())).collect(Collectors.toList());
 
         resultList.addAll(noGroupFileInfoList.stream()

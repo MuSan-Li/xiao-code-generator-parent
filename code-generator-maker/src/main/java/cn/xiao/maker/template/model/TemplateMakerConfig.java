@@ -23,4 +23,6 @@ public class TemplateMakerConfig implements Serializable {
 
     TemplateMakerModelConfig modelConfig = new TemplateMakerModelConfig();
 
+    TemplateMakerOutputConfig outputConfig = new TemplateMakerOutputConfig();
+
 }

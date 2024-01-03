@@ -22,6 +22,8 @@ public class TemplateMakerFileConfig implements Serializable {
 
         private String path;
 
+        private String condition;
+
         private List<FileFilterConfig> filterConfigList;
     }
 

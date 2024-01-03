@@ -146,7 +146,7 @@ public class TemplateMakerTest {
 
         templateMakerModelConfig.setModels(Collections.singletonList(modelInfoConfig));
 
-        long id = TemplateMaker.makeTemplate(meta, originRootPath, templateMakerFileConfig, templateMakerModelConfig, 1L);
+        long id = TemplateMaker.makeTemplate(meta, originRootPath, templateMakerFileConfig, templateMakerModelConfig, null, 1L);
         System.out.println("id = " + id);
         System.out.println("============= success =============");
     }
@@ -176,7 +176,7 @@ public class TemplateMakerTest {
         modelInfoConfig.setReplaceText("BaseResponse");
         List<TemplateMakerModelConfig.ModelInfoConfig> modelInfoConfigList = Collections.singletonList(modelInfoConfig);
         templateMakerModelConfig.setModels(modelInfoConfigList);
-        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, 1735281524670181376L);
+        long id = TemplateMaker.makeTemplate(meta, originProjectPath, templateMakerFileConfig, templateMakerModelConfig, null, 1735281524670181376L);
         System.out.println(id);
     }
 
@@ -200,6 +200,14 @@ public class TemplateMakerTest {
         String templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker.json");
         TemplateMakerConfig templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
         long id = TemplateMaker.makeTemplate(templateMakerConfig);
+
+        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-1.json");
+        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+        id = TemplateMaker.makeTemplate(templateMakerConfig);
+
+        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-2.json");
+        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+        id = TemplateMaker.makeTemplate(templateMakerConfig);
         System.out.println(id);
     }
 }
