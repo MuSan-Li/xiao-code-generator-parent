@@ -203,9 +203,13 @@ public class TemplateMakerTest {
 
         templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-1.json");
         templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
-        id = TemplateMaker.makeTemplate(templateMakerConfig);
+        TemplateMaker.makeTemplate(templateMakerConfig);
 
         templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-2.json");
+        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+        TemplateMaker.makeTemplate(templateMakerConfig);
+
+        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-3.json");
         templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
         id = TemplateMaker.makeTemplate(templateMakerConfig);
         System.out.println(id);
