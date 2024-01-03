@@ -32,7 +32,7 @@ public class DynamicGenerator {
     * @param outputPath
     * @param model
     */
-    public static void doGenerate(String inputPath, String outputPath, Object model)Exception {
+    public static void doGenerate(String inputPath, String outputPath, Object model) throws Exception {
         //new 出 Configuration 对象，参数为 FreeMarker 版本号
         Configuration configuration = new Configuration(Configuration.VERSION_2_3_32);
 

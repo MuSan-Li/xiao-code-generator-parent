@@ -109,7 +109,7 @@ public class TemplateMakerTest {
      * 测试 Bug-1
      */
     @Test
-    public void testMakeTemplateBug1() {
+    public void testMakeTemplateBug1() throws Exception {
 
         Meta meta = new Meta();
         meta.setName("springboot-init-generator");
