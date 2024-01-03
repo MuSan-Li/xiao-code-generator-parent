@@ -1,6 +1,7 @@
 package cn.xiao.maker.template;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.meta.Meta;
 import cn.xiao.maker.template.model.FileFilterConfig;
@@ -200,18 +201,24 @@ public class TemplateMakerTest {
         String templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker.json");
         TemplateMakerConfig templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
         long id = TemplateMaker.makeTemplate(templateMakerConfig);
-
-        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-1.json");
-        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
-        TemplateMaker.makeTemplate(templateMakerConfig);
-
-        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-2.json");
-        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
-        TemplateMaker.makeTemplate(templateMakerConfig);
-
-        templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-3.json");
-        templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
-        id = TemplateMaker.makeTemplate(templateMakerConfig);
         System.out.println(id);
+        int index = 1;
+        boolean isGenerate = true;
+        while (isGenerate) {
+            try {
+                System.out.println("index = " + index);
+                templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-" + index + ".json");
+                if (StrUtil.isBlank(templateMakerJsonStr)) {
+                    isGenerate = false;
+                } else {
+                    templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+                    TemplateMaker.makeTemplate(templateMakerConfig);
+                    index++;
+                }
+            } catch (Exception e) {
+                System.out.println("生成模板失败，请检查模板配置");
+                return;
+            }
+        }
     }
 }

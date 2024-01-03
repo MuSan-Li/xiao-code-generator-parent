@@ -42,5 +42,9 @@ public class TemplateMakerModelConfig implements Serializable {
         private String groupKey;
 
         private String groupName;
+
+        private String type;
+
+        private String description;
     }
 }

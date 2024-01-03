@@ -104,10 +104,7 @@ public class TemplateMaker {
         sourceRootPath = sourceRootPath.replaceAll(CommonConstant.BACK_SLASH, StrPool.SLASH);
 
         // 处理文件信息
-        List<FilesDTO> newFilesDTOList = makeFileTemplates(fileConfig,
-                modelConfig, sourceRootPath);
-
-        //
+        List<FilesDTO> newFilesDTOList = makeFileTemplates(fileConfig, modelConfig, sourceRootPath);
 
         // 处理模型信息
         List<ModelsDTO> newModelsDTOList = getModelInfoList(modelConfig);
@@ -195,13 +192,8 @@ public class TemplateMaker {
 
         // 如果是模型组 全放到一个分组内
         if (Objects.nonNull(modelGroupConfig)) {
-            String condition = modelGroupConfig.getCondition();
-            String groupKey = modelGroupConfig.getGroupKey();
-            String groupName = modelGroupConfig.getGroupName();
             ModelsDTO groupModelsDTO = new ModelsDTO();
-            groupModelsDTO.setGroupKey(groupKey);
-            groupModelsDTO.setGroupName(groupName);
-            groupModelsDTO.setCondition(condition);
+            BeanUtil.copyProperties(modelGroupConfig, groupModelsDTO);
             groupModelsDTO.setModels(inputModelsDTOList);
             newModelsDTOList.add(groupModelsDTO);
         } else {
