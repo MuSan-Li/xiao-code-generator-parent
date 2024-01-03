@@ -36,7 +36,6 @@ public class Meta implements Serializable {
 
         private String inputRootPath;
 
-
         private String outputRootPath;
 
         private String type;
