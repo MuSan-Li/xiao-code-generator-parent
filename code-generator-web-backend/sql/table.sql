@@ -39,3 +39,24 @@ create table if not exists t_generator
     is_delete    tinyint  default 0                 not null comment '是否删除',
     index idx_userId (user_id)
 ) comment '代码生成器信息表' collate = utf8mb4_unicode_ci;
+
+INSERT INTO t_user (id, user_account, user_password, user_name, user_avatar, user_profile, user_role)
+VALUES (1, 'admin', 'b0dd3697a192885d7c055db46155b26a', '管理员',
+        'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png', '我有一头小毛驴我从来也不骑', 'admin');
+INSERT INTO t_user (id, user_account, user_password, user_name, user_avatar, user_profile, user_role)
+VALUES (2, 'test', 'b0dd3697a192885d7c055db46155b26a', 'sb测试',
+        'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png', '我有一头小毛驴我从来也不骑', 'user');
+
+
+INSERT INTO t_generator (id, name, description, base_package, version, author, tags, picture, file_config, model_config,
+                         dist_path, status, user_id)
+VALUES (1, 'ACM 模板项目', 'ACM 模板项目生成器', 'cn.xiao', '1.0', 'xiao', '["Java"]',
+        'https://pic.yupi.icu/1/_r0_c1851-bf115939332e.jpg', '{}', '{}', null, 0, 1);
+INSERT INTO t_generator (id, name, description, base_package, version, author, tags, picture, file_config, model_config,
+                         dist_path, status, user_id)
+VALUES (2, 'Spring Boot 初始化模板', 'Spring Boot 初始化模板项目生成器', 'cn.xiao', '1.0', 'xiao', '["Java"]',
+        'https://pic.yupi.icu/1/_r0_c0726-7e30f8db802a.jpg', '{}', '{}', null, 0, 1);
+INSERT INTO t_generator (id, name, description, base_package, version, author, tags, picture, file_config, model_config,
+                         dist_path, status, user_id)
+VALUES (4, '用户中心', '用户中心项目生成器', 'cn.xiao', '1.0', 'xiao', '["Java", "前端"]',
+        'https://pic.yupi.icu/1/_r1_c1c15-79cdecf24aed.jpg', '{}', '{}', null, 0, 1);
