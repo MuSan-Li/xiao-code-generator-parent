@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Data
 public class UserAddRequest implements Serializable {
 
-
     /**
      * 用户昵称
      */

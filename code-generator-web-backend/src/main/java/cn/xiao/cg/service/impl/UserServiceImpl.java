@@ -11,7 +11,6 @@ import cn.xiao.cg.model.vo.LoginUserVO;
 import cn.xiao.cg.model.vo.UserVO;
 import cn.xiao.cg.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -47,20 +46,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
         }
+
         if (userAccount.length() < 4) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户账号过短");
         }
+
         if (userPassword.length() < 8 || checkPassword.length() < 8) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户密码过短");
         }
+
         // 密码和校验密码相同
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
         synchronized (userAccount.intern()) {
             // 账户不能重复
-            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_account", userAccount);
+            LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
+            queryWrapper.eq(User::getUserAccount, userAccount);
             long count = this.baseMapper.selectCount(queryWrapper);
             if (count > 0) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
@@ -219,20 +221,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
         }
         Long id = userQueryRequest.getId();
-        String unionId = userQueryRequest.getUnionId();
-        String mpOpenId = userQueryRequest.getMpOpenId();
-        String userName = userQueryRequest.getUserName();
+        String userAccount = userQueryRequest.getUserAccount();
         String userProfile = userQueryRequest.getUserProfile();
+        String userName = userQueryRequest.getUserName();
         String userRole = userQueryRequest.getUserRole();
-        // String sortField = userQueryRequest.getSortField();
-        // String sortOrder = userQueryRequest.getSortOrder();
         LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
         queryWrapper.eq(ObjectUtils.isNotEmpty(id), User::getId, id);
         queryWrapper.eq(StringUtils.isNotBlank(userRole), User::getUserRole, userRole);
-        queryWrapper.like(StringUtils.isNotBlank(userProfile), User::getUserProfile, userProfile);
+        queryWrapper.eq(StringUtils.isNotBlank(userRole), User::getUserRole, userRole);
+        queryWrapper.eq(StringUtils.isNotBlank(userAccount), User::getUserAccount, userAccount);
         queryWrapper.like(StringUtils.isNotBlank(userName), User::getUserName, userName);
-        // queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-        //         sortField);
+        queryWrapper.like(StringUtils.isNotBlank(userProfile), User::getUserProfile, userProfile);
         return queryWrapper;
     }
 }
