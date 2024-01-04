@@ -1,15 +1,15 @@
-package cn.xiao.springbootinit.service.impl;
+package cn.xiao.cg.service.impl;
 
-import cn.xiao.springbootinit.common.ErrorCode;
-import cn.xiao.springbootinit.constant.UserConstant;
-import cn.xiao.springbootinit.enums.UserRoleEnum;
-import cn.xiao.springbootinit.exception.BusinessException;
-import cn.xiao.springbootinit.mapper.UserMapper;
-import cn.xiao.springbootinit.model.dto.user.UserQueryRequest;
-import cn.xiao.springbootinit.model.entity.User;
-import cn.xiao.springbootinit.model.vo.LoginUserVO;
-import cn.xiao.springbootinit.model.vo.UserVO;
-import cn.xiao.springbootinit.service.UserService;
+import cn.xiao.cg.common.ErrorCode;
+import cn.xiao.cg.constant.UserConstant;
+import cn.xiao.cg.enums.UserRoleEnum;
+import cn.xiao.cg.exception.BusinessException;
+import cn.xiao.cg.mapper.UserMapper;
+import cn.xiao.cg.model.dto.user.UserQueryRequest;
+import cn.xiao.cg.model.entity.User;
+import cn.xiao.cg.model.vo.LoginUserVO;
+import cn.xiao.cg.model.vo.UserVO;
+import cn.xiao.cg.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;

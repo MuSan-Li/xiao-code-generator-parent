@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.model.dto.post;
+package cn.xiao.cg.model.dto.post;
 
 import lombok.Data;
 

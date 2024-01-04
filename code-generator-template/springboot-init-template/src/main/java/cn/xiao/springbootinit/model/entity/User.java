@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.model.entity;
+package cn.xiao.cg.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

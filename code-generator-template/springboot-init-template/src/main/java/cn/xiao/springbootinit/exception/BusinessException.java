@@ -1,6 +1,6 @@
-package cn.xiao.springbootinit.exception;
+package cn.xiao.cg.exception;
 
-import cn.xiao.springbootinit.common.ErrorCode;
+import cn.xiao.cg.common.ErrorCode;
 import lombok.Getter;
 
 /**

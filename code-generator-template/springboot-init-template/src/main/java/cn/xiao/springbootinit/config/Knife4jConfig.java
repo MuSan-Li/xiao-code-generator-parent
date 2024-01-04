@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.config;
+package cn.xiao.cg.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

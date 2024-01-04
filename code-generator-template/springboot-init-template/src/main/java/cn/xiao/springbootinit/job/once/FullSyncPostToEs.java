@@ -1,10 +1,10 @@
-package cn.xiao.springbootinit.job.once;
+package cn.xiao.cg.job.once;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.xiao.springbootinit.esdao.PostEsDao;
-import cn.xiao.springbootinit.model.dto.post.PostEsDTO;
-import cn.xiao.springbootinit.model.entity.Post;
-import cn.xiao.springbootinit.service.PostService;
+import cn.xiao.cg.esdao.PostEsDao;
+import cn.xiao.cg.model.dto.post.PostEsDTO;
+import cn.xiao.cg.model.entity.Post;
+import cn.xiao.cg.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 

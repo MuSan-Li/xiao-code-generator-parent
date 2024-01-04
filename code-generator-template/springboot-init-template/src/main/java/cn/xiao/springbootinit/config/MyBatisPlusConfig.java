@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.config;
+package cn.xiao.cg.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

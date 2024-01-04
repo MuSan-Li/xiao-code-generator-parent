@@ -1,7 +1,6 @@
 package cn.xiao.maker.constant;
 
 import cn.hutool.core.text.StrPool;
-import com.sun.org.apache.xml.internal.utils.LocaleUtility;
 
 /**
  * 常量类
@@ -51,6 +50,6 @@ public abstract class CommonConstant {
     /**
      * "" 字符
      */
-    public static final String BLANK = LocaleUtility.EMPTY_STRING;
+    public static final String BLANK = "";
 
 }

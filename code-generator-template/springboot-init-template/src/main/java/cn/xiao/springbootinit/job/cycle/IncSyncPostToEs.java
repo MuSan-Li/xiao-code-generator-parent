@@ -1,9 +1,9 @@
-package cn.xiao.springbootinit.job.cycle;
+package cn.xiao.cg.job.cycle;
 
-import cn.xiao.springbootinit.esdao.PostEsDao;
-import cn.xiao.springbootinit.mapper.PostMapper;
-import cn.xiao.springbootinit.model.dto.post.PostEsDTO;
-import cn.xiao.springbootinit.model.entity.Post;
+import cn.xiao.cg.esdao.PostEsDao;
+import cn.xiao.cg.mapper.PostMapper;
+import cn.xiao.cg.model.dto.post.PostEsDTO;
+import cn.xiao.cg.model.entity.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.scheduling.annotation.Scheduled;

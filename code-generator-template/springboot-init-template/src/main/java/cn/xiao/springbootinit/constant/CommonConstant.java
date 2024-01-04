@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.constant;
+package cn.xiao.cg.constant;
 
 /**
  * 通用常量

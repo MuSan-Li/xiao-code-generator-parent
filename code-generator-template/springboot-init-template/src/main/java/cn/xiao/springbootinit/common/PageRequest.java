@@ -1,6 +1,6 @@
-package cn.xiao.springbootinit.common;
+package cn.xiao.cg.common;
 
-import cn.xiao.springbootinit.constant.CommonConstant;
+import cn.xiao.cg.constant.CommonConstant;
 import lombok.Data;
 
 /**

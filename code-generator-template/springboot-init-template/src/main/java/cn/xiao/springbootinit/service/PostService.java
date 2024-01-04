@@ -1,8 +1,8 @@
-package cn.xiao.springbootinit.service;
+package cn.xiao.cg.service;
 
-import cn.xiao.springbootinit.model.dto.post.PostQueryRequest;
-import cn.xiao.springbootinit.model.entity.Post;
-import cn.xiao.springbootinit.model.vo.PostVO;
+import cn.xiao.cg.model.dto.post.PostQueryRequest;
+import cn.xiao.cg.model.entity.Post;
+import cn.xiao.cg.model.vo.PostVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;

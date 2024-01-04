@@ -1,6 +1,6 @@
-package cn.xiao.springbootinit.mapper;
+package cn.xiao.cg.mapper;
 
-import cn.xiao.springbootinit.model.entity.Post;
+import cn.xiao.cg.model.entity.Post;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import java.util.Date;

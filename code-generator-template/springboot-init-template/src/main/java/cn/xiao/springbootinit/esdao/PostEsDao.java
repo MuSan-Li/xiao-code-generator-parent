@@ -1,6 +1,6 @@
-package cn.xiao.springbootinit.esdao;
+package cn.xiao.cg.esdao;
 
-import cn.xiao.springbootinit.model.dto.post.PostEsDTO;
+import cn.xiao.cg.model.dto.post.PostEsDTO;
 import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.List;

@@ -1,12 +1,12 @@
-package cn.xiao.springbootinit.aop;
+package cn.xiao.cg.aop;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.xiao.springbootinit.annotation.AuthCheck;
-import cn.xiao.springbootinit.common.ErrorCode;
-import cn.xiao.springbootinit.enums.UserRoleEnum;
-import cn.xiao.springbootinit.exception.BusinessException;
-import cn.xiao.springbootinit.model.entity.User;
-import cn.xiao.springbootinit.service.UserService;
+import cn.xiao.cg.annotation.AuthCheck;
+import cn.xiao.cg.common.ErrorCode;
+import cn.xiao.cg.enums.UserRoleEnum;
+import cn.xiao.cg.exception.BusinessException;
+import cn.xiao.cg.model.entity.User;
+import cn.xiao.cg.service.UserService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

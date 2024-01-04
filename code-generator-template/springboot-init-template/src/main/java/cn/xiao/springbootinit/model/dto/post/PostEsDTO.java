@@ -1,7 +1,7 @@
-package cn.xiao.springbootinit.model.dto.post;
+package cn.xiao.cg.model.dto.post;
 
 import cn.hutool.core.util.ObjectUtil;
-import cn.xiao.springbootinit.model.entity.Post;
+import cn.xiao.cg.model.entity.Post;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import lombok.Data;

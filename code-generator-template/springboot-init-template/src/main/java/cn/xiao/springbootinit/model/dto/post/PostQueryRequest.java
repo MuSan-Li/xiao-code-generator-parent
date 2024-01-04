@@ -1,6 +1,6 @@
-package cn.xiao.springbootinit.model.dto.post;
+package cn.xiao.cg.model.dto.post;
 
-import cn.xiao.springbootinit.common.PageRequest;
+import cn.xiao.cg.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

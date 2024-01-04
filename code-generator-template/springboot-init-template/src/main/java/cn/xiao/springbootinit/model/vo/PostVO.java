@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.model.vo;
+package cn.xiao.cg.model.vo;
 
 import com.google.gson.Gson;
 import lombok.Data;

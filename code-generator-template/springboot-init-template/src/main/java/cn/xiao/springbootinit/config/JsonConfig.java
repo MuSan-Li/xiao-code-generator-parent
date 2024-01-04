@@ -1,4 +1,4 @@
-package cn.xiao.springbootinit.config;
+package cn.xiao.cg.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;

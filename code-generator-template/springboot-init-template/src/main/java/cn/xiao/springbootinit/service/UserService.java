@@ -1,9 +1,9 @@
-package cn.xiao.springbootinit.service;
+package cn.xiao.cg.service;
 
-import cn.xiao.springbootinit.model.dto.user.UserQueryRequest;
-import cn.xiao.springbootinit.model.entity.User;
-import cn.xiao.springbootinit.model.vo.LoginUserVO;
-import cn.xiao.springbootinit.model.vo.UserVO;
+import cn.xiao.cg.model.dto.user.UserQueryRequest;
+import cn.xiao.cg.model.entity.User;
+import cn.xiao.cg.model.vo.LoginUserVO;
+import cn.xiao.cg.model.vo.UserVO;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import javax.servlet.http.HttpServletRequest;
