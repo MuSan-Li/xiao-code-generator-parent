@@ -1,12 +1,12 @@
 import CreateModal from '@/pages/Admin/User/components/CreateModal';
 import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
-import { deleteUser, listUserByPage } from '@/services/backend/userController';
-import { PlusOutlined } from '@ant-design/icons';
-import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { PageContainer, ProTable } from '@ant-design/pro-components';
+import {PlusOutlined} from '@ant-design/icons';
+import type {ActionType, ProColumns} from '@ant-design/pro-components';
+import {PageContainer, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, message, Space, Typography } from 'antd';
-import React, { useRef, useState } from 'react';
+import {Button, message, Modal, Space, Typography} from 'antd';
+import React, {useRef, useState} from 'react';
+import {deleteUserUsingPOST, listUserVOByPageUsingPOST} from "@/services/backend/userController";
 
 /**
  * 用户管理页面
@@ -28,21 +28,28 @@ const UserAdminPage: React.FC = () => {
    * @param row
    */
   const handleDelete = async (row: API.User) => {
-    const hide = message.loading('正在删除');
-    if (!row) return true;
-    try {
-      await deleteUser({
-        id: row.id as any,
-      });
-      hide();
-      message.success('删除成功');
-      actionRef?.current?.reload();
-      return true;
-    } catch (error: any) {
-      hide();
-      message.error('删除失败，' + error.message);
-      return false;
-    }
+    Modal.confirm({
+      content: `确认要删除吗?`,
+      async onOk() {
+        const hide = message.loading('正在删除');
+        if (!row) return true;
+        try {
+          await deleteUserUsingPOST({
+            id: row.id as any,
+          });
+          hide();
+          message.success('删除成功');
+          actionRef?.current?.reload();
+          return true;
+        } catch (error: any) {
+          hide();
+          message.error('删除失败，' + error.message);
+          return false;
+        }
+      },
+      onCancel() {
+      },
+    });
   };
 
   /**
@@ -59,6 +66,7 @@ const UserAdminPage: React.FC = () => {
       title: '账号',
       dataIndex: 'userAccount',
       valueType: 'text',
+      hideInForm: true,
     },
     {
       title: '用户名',
@@ -78,6 +86,7 @@ const UserAdminPage: React.FC = () => {
       title: '简介',
       dataIndex: 'userProfile',
       valueType: 'textarea',
+      hideInSearch: true,
     },
     {
       title: '权限',
@@ -129,7 +138,8 @@ const UserAdminPage: React.FC = () => {
     },
   ];
   return (
-    <PageContainer>
+    <div className="user-page">
+      <PageContainer title={<></>}>
       <ProTable<API.User>
         headerTitle={'查询表格'}
         actionRef={actionRef}
@@ -152,7 +162,7 @@ const UserAdminPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const { data, code } = await listUserByPage({
+          const {data, code} = await listUserVOByPageUsingPOST({
             ...params,
             sortField,
             sortOrder,
@@ -192,6 +202,7 @@ const UserAdminPage: React.FC = () => {
         }}
       />
     </PageContainer>
+    </div>
   );
 };
 export default UserAdminPage;

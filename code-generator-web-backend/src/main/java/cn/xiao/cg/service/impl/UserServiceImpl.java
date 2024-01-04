@@ -1,10 +1,13 @@
 package cn.xiao.cg.service.impl;
 
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.xiao.cg.common.ErrorCode;
 import cn.xiao.cg.constant.UserConstant;
 import cn.xiao.cg.enums.UserRoleEnum;
 import cn.xiao.cg.exception.BusinessException;
 import cn.xiao.cg.mapper.UserMapper;
+import cn.xiao.cg.model.dto.user.UserAddRequest;
 import cn.xiao.cg.model.dto.user.UserQueryRequest;
 import cn.xiao.cg.model.entity.User;
 import cn.xiao.cg.model.vo.LoginUserVO;
@@ -24,6 +27,7 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +46,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
+        checkRegisterUserInfo(userAccount, userPassword, checkPassword);
+        User user = new User();
+        user.setUserAccount(userAccount);
+        user.setUserPassword(userPassword);
+        return userRegister(user);
+    }
+
+    /**
+     * 校验用户信息
+     *
+     * @param userAccount
+     * @param userPassword
+     * @param checkPassword
+     */
+    private static void checkRegisterUserInfo(String userAccount, String userPassword, String checkPassword) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword, checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -59,6 +78,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
+    }
+
+    @Override
+    public long userRegister(User user) {
+        String userAccount = user.getUserAccount();
+        String userPassword = user.getUserPassword();
         synchronized (userAccount.intern()) {
             // 账户不能重复
             LambdaQueryWrapper<User> queryWrapper = Wrappers.lambdaQuery();
@@ -70,14 +95,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
             // 3. 插入数据
-            User user = new User();
-            user.setUserAccount(userAccount);
-            user.setUserPassword(encryptPassword);
-            boolean saveResult = this.save(user);
+            User userRegister = new User();
+            userRegister.setUserAccount(userAccount);
+            userRegister.setUserPassword(encryptPassword);
+            userRegister.setUserName(user.getUserName());
+            userRegister.setUserAvatar(user.getUserAvatar());
+            userRegister.setUserProfile(user.getUserProfile());
+            userRegister.setUserRole(user.getUserRole());
+            boolean saveResult = this.save(userRegister);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
             }
-            return user.getId();
+            return userRegister.getId();
         }
     }
 
@@ -131,25 +160,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
         return currentUser;
-    }
-
-    /**
-     * 获取当前登录用户（允许未登录）
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public User getLoginUserPermitNull(HttpServletRequest request) {
-        // 先判断是否已登录
-        Object userObj = request.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
-        User currentUser = (User) userObj;
-        if (ObjectUtils.isEmpty(currentUser) || ObjectUtils.isEmpty(currentUser.getId())) {
-            return null;
-        }
-        // 从数据库查询（追求性能的话可以注释，直接走缓存）
-        long userId = currentUser.getId();
-        return this.getById(userId);
     }
 
     /**
@@ -233,5 +243,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.like(StringUtils.isNotBlank(userName), User::getUserName, userName);
         queryWrapper.like(StringUtils.isNotBlank(userProfile), User::getUserProfile, userProfile);
         return queryWrapper;
+    }
+
+    @Override
+    public boolean addUser(UserAddRequest addRequest) {
+
+        if (Objects.isNull(addRequest)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String userName = addRequest.getUserName();
+        // TODO userAccount 生成可能会有冲突
+        String userAccount = RandomUtil.randomString(10);
+        String userAvatar = addRequest.getUserAvatar();
+        String userRole = addRequest.getUserRole();
+        String userProfile = addRequest.getUserProfile();
+        if (CharSequenceUtil.hasBlank(userAccount, userAvatar, userRole)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        String userPassword = "12345678";
+        checkRegisterUserInfo(userAccount, userPassword, userPassword);
+        User user = new User();
+        user.setUserAccount(userAccount);
+        user.setUserPassword(userPassword);
+        user.setUserName(userName);
+        user.setUserAvatar(userAvatar);
+        user.setUserProfile(userProfile);
+        user.setUserRole(userRole);
+        long userId = userRegister(user);
+        log.info("userId:{}", userId);
+        return true;
     }
 }

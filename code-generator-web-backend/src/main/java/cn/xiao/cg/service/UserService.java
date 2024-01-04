@@ -1,5 +1,6 @@
 package cn.xiao.cg.service;
 
+import cn.xiao.cg.model.dto.user.UserAddRequest;
 import cn.xiao.cg.model.dto.user.UserQueryRequest;
 import cn.xiao.cg.model.entity.User;
 import cn.xiao.cg.model.vo.LoginUserVO;
@@ -28,6 +29,14 @@ public interface UserService extends IService<User> {
     long userRegister(String userAccount, String userPassword, String checkPassword);
 
     /**
+     * 用户注册
+     *
+     * @param user 用户信息
+     * @return 新用户 id
+     */
+    long userRegister(User user);
+
+    /**
      * 用户登录
      *
      * @param userAccount  用户账户
@@ -44,14 +53,6 @@ public interface UserService extends IService<User> {
      * @return
      */
     User getLoginUser(HttpServletRequest request);
-
-    /**
-     * 获取当前登录用户（允许未登录）
-     *
-     * @param request
-     * @return
-     */
-    User getLoginUserPermitNull(HttpServletRequest request);
 
     /**
      * 是否为管理员
@@ -108,4 +109,11 @@ public interface UserService extends IService<User> {
      */
     LambdaQueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     * 管理员创建用户
+     *
+     * @param addRequest
+     * @return
+     */
+    boolean addUser(UserAddRequest addRequest);
 }

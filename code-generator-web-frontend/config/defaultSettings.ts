@@ -1,4 +1,4 @@
-import { ProLayoutProps } from '@ant-design/pro-components';
+import {ProLayoutProps} from '@ant-design/pro-components';
 
 /**
  * 默认设置
@@ -15,7 +15,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '鱼皮前端万用模板',
+  title: '小小前端万用模板',
   pwa: true,
   iconfontUrl: '',
   token: {
@@ -25,3 +25,6 @@ const Settings: ProLayoutProps & {
 };
 
 export default Settings;
+
+
+

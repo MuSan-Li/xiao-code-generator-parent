@@ -1,13 +1,13 @@
 declare namespace API {
-  type BaseResponseBoolean = {
+  type BaseResponseboolean = {
     code?: number;
     data?: boolean;
     message?: string;
   };
 
-  type BaseResponseInteger = {
+  type BaseResponseGeneratorVO = {
     code?: number;
-    data?: number;
+    data?: GeneratorVO;
     message?: string;
   };
 
@@ -17,15 +17,15 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseLong = {
+  type BaseResponselong = {
     code?: number;
-    data?: string;
+    data?: number;
     message?: string;
   };
 
-  type BaseResponsePagePostVO = {
+  type BaseResponsePageGeneratorVO = {
     code?: number;
-    data?: PagePostVO;
+    data?: PageGeneratorVO;
     message?: string;
   };
 
@@ -41,13 +41,7 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponsePostVO = {
-    code?: number;
-    data?: PostVO;
-    message?: string;
-  };
-
-  type BaseResponseString = {
+  type BaseResponsestring = {
     code?: number;
     data?: string;
     message?: string;
@@ -65,186 +59,215 @@ declare namespace API {
     message?: string;
   };
 
-  type checkParams = {
-    timestamp: string;
-    nonce: string;
-    signature: string;
-    echostr: string;
-  };
-
   type DeleteRequest = {
-    id?: string;
+    id?: number;
   };
 
-  type getPostVOByIdParams = {
-    id: string;
+  type FileConfigDTO = {
+    files?: FilesDTO[];
+    inputRootPath?: string;
+    outputRootPath?: string;
+    sourceRootPath?: string;
+    type?: string;
   };
 
-  type getUserByIdParams = {
-    id: string;
+  type FilesDTO = {
+    condition?: string;
+    files?: FilesDTO[];
+    generateType?: string;
+    groupKey?: string;
+    groupName?: string;
+    inputPath?: string;
+    outputPath?: string;
+    type?: string;
   };
 
-  type getUserVOByIdParams = {
-    id: string;
+  type GeneratorAddRequest = {
+    author?: string;
+    basePackage?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: FileConfigDTO;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    picture?: string;
+    status?: number;
+    tags?: string[];
+    version?: string;
+  };
+
+  type GeneratorEditRequest = {
+    author?: string;
+    basePackage?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: FileConfigDTO;
+    id?: number;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    picture?: string;
+    tags?: string[];
+    version?: string;
+  };
+
+  type GeneratorQueryRequest = {
+    author?: string;
+    basePackage?: string;
+    current?: number;
+    description?: string;
+    distPath?: string;
+    id?: number;
+    name?: string;
+    pageSize?: number;
+    sortField?: string;
+    status?: number;
+    tags?: string[];
+    userId?: number;
+    version?: string;
+  };
+
+  type GeneratorUpdateRequest = {
+    author?: string;
+    basePackage?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: FileConfigDTO;
+    id?: number;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    picture?: string;
+    status?: number;
+    tags?: string[];
+    version?: string;
+  };
+
+  type GeneratorVO = {
+    author?: string;
+    basePackage?: string;
+    createTime?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: FileConfigDTO;
+    id?: number;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    picture?: string;
+    status?: number;
+    tags?: string[];
+    updateTime?: string;
+    user?: UserVO;
+    userId?: number;
+    version?: string;
+  };
+
+  type getGeneratorVOByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getUserByIdUsingGETParams = {
+    /** id */
+    id?: number;
+  };
+
+  type getUserVOByIdUsingGETParams = {
+    /** id */
+    id?: number;
   };
 
   type LoginUserVO = {
-    id?: string;
-    userName?: string;
+    createTime?: string;
+    id?: number;
+    updateTime?: string;
     userAvatar?: string;
+    userName?: string;
     userProfile?: string;
     userRole?: string;
-    createTime?: string;
-    updateTime?: string;
+  };
+
+  type ModelConfigDTO = {
+    models?: ModelsDTO[];
+  };
+
+  type ModelsDTO = {
+    abbr?: string;
+    allArgsStr?: string;
+    condition?: string;
+    defaultValue?: Record<string, any>;
+    description?: string;
+    fieldName?: string;
+    groupKey?: string;
+    groupName?: string;
+    models?: ModelsDTO[];
+    type?: string;
   };
 
   type OrderItem = {
-    column?: string;
     asc?: boolean;
+    column?: string;
   };
 
-  type PagePostVO = {
-    records?: PostVO[];
-    total?: string;
-    size?: string;
-    current?: string;
-    orders?: OrderItem[];
-    optimizeCountSql?: boolean;
-    searchCount?: boolean;
-    optimizeJoinOfCountSql?: boolean;
+  type PageGeneratorVO = {
     countId?: string;
-    maxLimit?: string;
-    pages?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: GeneratorVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
   type PageUser = {
-    records?: User[];
-    total?: string;
-    size?: string;
-    current?: string;
-    orders?: OrderItem[];
-    optimizeCountSql?: boolean;
-    searchCount?: boolean;
-    optimizeJoinOfCountSql?: boolean;
     countId?: string;
-    maxLimit?: string;
-    pages?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: User[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
   type PageUserVO = {
-    records?: UserVO[];
-    total?: string;
-    size?: string;
-    current?: string;
-    orders?: OrderItem[];
-    optimizeCountSql?: boolean;
-    searchCount?: boolean;
-    optimizeJoinOfCountSql?: boolean;
     countId?: string;
-    maxLimit?: string;
-    pages?: string;
+    current?: number;
+    maxLimit?: number;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: number;
+    records?: UserVO[];
+    searchCount?: boolean;
+    size?: number;
+    total?: number;
   };
 
-  type PostAddRequest = {
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostEditRequest = {
-    id?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostFavourAddRequest = {
-    postId?: string;
-  };
-
-  type PostFavourQueryRequest = {
-    current?: string;
-    pageSize?: string;
-    sortField?: string;
-    sortOrder?: string;
-    postQueryRequest?: PostQueryRequest;
-    userId?: string;
-  };
-
-  type PostQueryRequest = {
-    current?: string;
-    pageSize?: string;
-    sortField?: string;
-    sortOrder?: string;
-    id?: string;
-    notId?: string;
-    searchText?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-    orTags?: string[];
-    userId?: string;
-    favourUserId?: string;
-  };
-
-  type PostThumbAddRequest = {
-    postId?: string;
-  };
-
-  type PostUpdateRequest = {
-    id?: string;
-    title?: string;
-    content?: string;
-    tags?: string[];
-  };
-
-  type PostVO = {
-    id?: string;
-    title?: string;
-    content?: string;
-    thumbNum?: number;
-    favourNum?: number;
-    userId?: string;
-    createTime?: string;
-    updateTime?: string;
-    tagList?: string[];
-    user?: UserVO;
-    hasThumb?: boolean;
-    hasFavour?: boolean;
-  };
-
-  type uploadFileParams = {
-    uploadFileRequest: UploadFileRequest;
-  };
-
-  type UploadFileRequest = {
+  type uploadFileUsingPOSTParams = {
     biz?: string;
   };
 
   type User = {
-    id?: string;
+    createTime?: string;
+    id?: number;
+    isDelete?: number;
+    updateTime?: string;
     userAccount?: string;
-    userPassword?: string;
-    unionId?: string;
-    mpOpenId?: string;
-    userName?: string;
     userAvatar?: string;
+    userName?: string;
+    userPassword?: string;
     userProfile?: string;
     userRole?: string;
-    createTime?: string;
-    updateTime?: string;
-    isDelete?: number;
   };
 
   type UserAddRequest = {
-    userName?: string;
     userAccount?: string;
     userAvatar?: string;
+    userName?: string;
     userRole?: string;
-  };
-
-  type userLoginByWxOpenParams = {
-    code: string;
   };
 
   type UserLoginRequest = {
@@ -253,44 +276,42 @@ declare namespace API {
   };
 
   type UserQueryRequest = {
-    current?: string;
-    pageSize?: string;
+    current?: number;
+    id?: number;
+    pageSize?: number;
     sortField?: string;
-    sortOrder?: string;
-    id?: string;
-    unionId?: string;
-    mpOpenId?: string;
+    userAccount?: string;
     userName?: string;
     userProfile?: string;
     userRole?: string;
   };
 
   type UserRegisterRequest = {
+    checkPassword?: string;
     userAccount?: string;
     userPassword?: string;
-    checkPassword?: string;
   };
 
   type UserUpdateMyRequest = {
-    userName?: string;
     userAvatar?: string;
+    userName?: string;
     userProfile?: string;
   };
 
   type UserUpdateRequest = {
-    id?: string;
-    userName?: string;
+    id?: number;
     userAvatar?: string;
+    userName?: string;
     userProfile?: string;
     userRole?: string;
   };
 
   type UserVO = {
-    id?: string;
-    userName?: string;
+    createTime?: string;
+    id?: number;
     userAvatar?: string;
+    userName?: string;
     userProfile?: string;
     userRole?: string;
-    createTime?: string;
   };
 }

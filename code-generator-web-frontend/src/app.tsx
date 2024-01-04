@@ -1,11 +1,10 @@
 import Footer from '@/components/Footer';
-import type { RunTimeLayoutConfig } from '@umijs/max';
-import { history } from '@umijs/max';
+import type {RunTimeLayoutConfig} from '@umijs/max';
+import {history} from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
-import { AvatarDropdown } from './components/RightContent/AvatarDropdown';
-import { requestConfig } from './requestConfig';
-import {getLoginUser} from "@/services/backend/userController";
-import {message} from "antd";
+import {AvatarDropdown} from './components/RightContent/AvatarDropdown';
+import {requestConfig} from './requestConfig';
+import {getLoginUserUsingGET} from "@/services/backend/userController";
 
 const loginPath = '/user/login';
 
@@ -20,19 +19,11 @@ export async function getInitialState(): Promise<InitialState> {
   const { location } = history;
   if (location.pathname !== loginPath) {
     try {
-      const res = await getLoginUser();
+      const res = await getLoginUserUsingGET();
       initialState.currentUser = res.data;
     } catch (error: any) {
       // 如果未登录
     }
-
-    // 模拟登录用户
-    // const mockUser: API.LoginUserVO = {
-    //   userAvatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    //   userName: 'yupi',
-    //   userRole: 'admin',
-    // };
-    // initialState.currentUser = mockUser;
   }
   return initialState;
 }
@@ -51,8 +42,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
     },
     footerRender: () => <Footer />,
     menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
     ...defaultSettings,
   };
 };

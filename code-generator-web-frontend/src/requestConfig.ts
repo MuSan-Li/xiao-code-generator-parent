@@ -4,10 +4,9 @@ import type {RequestConfig} from '@umijs/max';
 
 // 与后端约定的响应数据格式
 interface ResponseStructure {
-  success: boolean;
   data: any;
-  errorCode?: number;
-  errorMessage?: string;
+  code?: number;
+  message?: string;
 }
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -30,29 +29,27 @@ export const requestConfig: RequestConfig = {
   ],
 
   // 响应拦截器
-  responseInterceptors: [
-    (response) => {
-      // 请求地址
-      const requestPath: string = response.config.url ?? '';
+  responseInterceptors: [(response) => {
 
-      // 响应
-      const { data } = response as unknown as ResponseStructure;
-      if (!data) {
-        throw new Error('服务异常');
-      }
-      // 错误码处理
-      const code: number = data.code;
-      // 未登录，且不为获取用户登录信息接口
-      if (code === 40100) {
-        // 跳转至登录页
-        window.location.href = '/';
-        throw new Error('请先登录');
-      }
+    // 响应
+    const {data} = response as unknown as ResponseStructure;
+    if (!data) {
+      throw new Error('服务异常');
+    }
 
-      if (code !== 0) {
-        throw new Error(data.message ?? '服务器错误');
-      }
-      return response;
-    },
-  ],
+    // 错误码处理
+    const code: number = data.code;
+
+    // 未登录，且不为获取用户登录信息接口
+    if (code === 40100) {
+      // 跳转至登录页
+      window.location.href = '/user/login';
+      throw new Error('请先登录');
+    }
+
+    if (code !== 0) {
+      throw new Error(data.message ?? '服务器错误');
+    }
+    return response;
+  }],
 };
