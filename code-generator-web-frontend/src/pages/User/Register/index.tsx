@@ -6,7 +6,7 @@ import {history, useModel} from '@umijs/max';
 import {message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import {Link} from 'umi';
-import {userRegisterUsingPOST} from "@/services/backend/userController";
+import {userRegisterUsingPost} from "@/services/backend/userController";
 
 /**
  * 用户注册页面
@@ -30,7 +30,7 @@ const UserRegisterPage: React.FC = () => {
   const handleSubmit = async (values: API.UserRegisterRequest) => {
     try {
       // 注册
-      await userRegisterUsingPOST({
+      await userRegisterUsingPost({
         ...values,
       });
 

@@ -2,13 +2,13 @@ import {ProColumns, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
 import {message, Modal} from 'antd';
 import React from 'react';
-import {updateUserUsingPost} from "@/services/backend/userController";
+import {updateGeneratorUsingPost} from "@/services/backend/generatorController";
 
 interface Props {
-  oldData?: API.User;
+  oldData?: API.Generator;
   visible: boolean;
-  columns: ProColumns<API.User>[];
-  onSubmit: (values: API.UserUpdateRequest) => void;
+  columns: ProColumns<API.Generator>[];
+  onSubmit: (values: API.GeneratorAddRequest) => void;
   onCancel: () => void;
 }
 
@@ -17,10 +17,12 @@ interface Props {
  *
  * @param fields
  */
-const handleUpdate = async (fields: API.UserUpdateRequest) => {
+const handleUpdate = async (fields: API.GeneratorUpdateRequest) => {
+  fields.fileConfig = JSON.parse((fields.fileConfig || '{}') as string);
+  fields.modelConfig = JSON.parse((fields.modelConfig || '{}') as string);
   const hide = message.loading('正在更新');
   try {
-    await updateUserUsingPost(fields);
+    await updateGeneratorUsingPost(fields);
     hide();
     message.success('更新成功');
     return true;
@@ -37,11 +39,12 @@ const handleUpdate = async (fields: API.UserUpdateRequest) => {
  * @constructor
  */
 const UpdateModal: React.FC<Props> = (props) => {
-  const { oldData, visible, columns, onSubmit, onCancel } = props;
+  const {oldData, visible, columns, onSubmit, onCancel} = props;
 
   if (!oldData) {
     return <></>;
   }
+
 
   return (
     <Modal
@@ -57,9 +60,13 @@ const UpdateModal: React.FC<Props> = (props) => {
         type="form"
         columns={columns}
         form={{
-          initialValues: oldData,
+          initialValues: {
+            ...oldData,
+            // @ts-ignore
+            tags: JSON.parse(oldData.tags || '[]'),
+          },
         }}
-        onSubmit={async (values: API.UserUpdateRequest) => {
+        onSubmit={async (values: API.GeneratorAddRequest) => {
           const success = await handleUpdate({
             ...values,
             id: oldData.id as any,

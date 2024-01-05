@@ -6,8 +6,8 @@ import {Helmet, history, useModel} from '@umijs/max';
 import {message, Tabs} from 'antd';
 import React, {useState} from 'react';
 import Settings from '../../../../config/defaultSettings';
-import {userLoginUsingPOST} from "@/services/backend/userController";
 import {Link} from "@@/exports";
+import {userLoginUsingPost} from "@/services/backend/userController";
 
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
@@ -28,7 +28,7 @@ const Login: React.FC = () => {
   const handleSubmit = async (values: API.UserLoginRequest) => {
     try {
       // 登录
-      const res = await userLoginUsingPOST({
+      const res = await userLoginUsingPost({
         ...values,
       });
 

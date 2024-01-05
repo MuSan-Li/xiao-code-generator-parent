@@ -19,7 +19,13 @@ declare namespace API {
 
   type BaseResponselong = {
     code?: number;
-    data?: number;
+    data?: string;
+    message?: string;
+  };
+
+  type BaseResponsePageGenerator = {
+    code?: number;
+    data?: PageGenerator;
     message?: string;
   };
 
@@ -60,7 +66,7 @@ declare namespace API {
   };
 
   type DeleteRequest = {
-    id?: number;
+    id?: string;
   };
 
   type FileConfigDTO = {
@@ -80,6 +86,25 @@ declare namespace API {
     inputPath?: string;
     outputPath?: string;
     type?: string;
+  };
+
+  type Generator = {
+    author?: string;
+    basePackage?: string;
+    createTime?: string;
+    description?: string;
+    distPath?: string;
+    fileConfig?: string;
+    id?: string;
+    isDelete?: number;
+    modelConfig?: string;
+    name?: string;
+    picture?: string;
+    status?: number;
+    tags?: string;
+    updateTime?: string;
+    userId?: string;
+    version?: string;
   };
 
   type GeneratorAddRequest = {
@@ -102,7 +127,7 @@ declare namespace API {
     description?: string;
     distPath?: string;
     fileConfig?: FileConfigDTO;
-    id?: number;
+    id?: string;
     modelConfig?: ModelConfigDTO;
     name?: string;
     picture?: string;
@@ -116,14 +141,15 @@ declare namespace API {
     current?: number;
     description?: string;
     distPath?: string;
-    id?: number;
+    id?: string;
     name?: string;
     pageSize?: number;
     sortField?: string;
     status?: number;
     tags?: string[];
-    userId?: number;
+    userId?: string;
     version?: string;
+    searchText?: string;
   };
 
   type GeneratorUpdateRequest = {
@@ -132,7 +158,7 @@ declare namespace API {
     description?: string;
     distPath?: string;
     fileConfig?: FileConfigDTO;
-    id?: number;
+    id?: string;
     modelConfig?: ModelConfigDTO;
     name?: string;
     picture?: string;
@@ -148,7 +174,7 @@ declare namespace API {
     description?: string;
     distPath?: string;
     fileConfig?: FileConfigDTO;
-    id?: number;
+    id?: string;
     modelConfig?: ModelConfigDTO;
     name?: string;
     picture?: string;
@@ -156,28 +182,28 @@ declare namespace API {
     tags?: string[];
     updateTime?: string;
     user?: UserVO;
-    userId?: number;
+    userId?: string;
     version?: string;
   };
 
   type getGeneratorVOByIdUsingGETParams = {
     /** id */
-    id?: number;
+    id?: string;
   };
 
   type getUserByIdUsingGETParams = {
     /** id */
-    id?: number;
+    id?: string;
   };
 
   type getUserVOByIdUsingGETParams = {
     /** id */
-    id?: number;
+    id?: string;
   };
 
   type LoginUserVO = {
     createTime?: string;
-    id?: number;
+    id?: string;
     updateTime?: string;
     userAvatar?: string;
     userName?: string;
@@ -207,43 +233,56 @@ declare namespace API {
     column?: string;
   };
 
-  type PageGeneratorVO = {
+  type PageGenerator = {
     countId?: string;
-    current?: number;
-    maxLimit?: number;
+    current?: string;
+    maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
-    pages?: number;
+    pages?: string;
+    records?: Generator[];
+    searchCount?: boolean;
+    size?: string;
+    total?: string;
+  };
+
+  type PageGeneratorVO = {
+    countId?: string;
+    current?: string;
+    maxLimit?: string;
+    optimizeCountSql?: boolean;
+    orders?: OrderItem[];
+    pages?: string;
     records?: GeneratorVO[];
     searchCount?: boolean;
-    size?: number;
-    total?: number;
+    size?: string;
+    total?: string;
   };
 
   type PageUser = {
     countId?: string;
-    current?: number;
-    maxLimit?: number;
+    current?: string;
+    maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
-    pages?: number;
+    pages?: string;
     records?: User[];
     searchCount?: boolean;
-    size?: number;
-    total?: number;
+    size?: string;
+    total?: string;
   };
 
   type PageUserVO = {
     countId?: string;
-    current?: number;
-    maxLimit?: number;
+    current?: string;
+    maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
-    pages?: number;
+    pages?: string;
     records?: UserVO[];
     searchCount?: boolean;
-    size?: number;
-    total?: number;
+    size?: string;
+    total?: string;
   };
 
   type uploadFileUsingPOSTParams = {
@@ -252,7 +291,7 @@ declare namespace API {
 
   type User = {
     createTime?: string;
-    id?: number;
+    id?: string;
     isDelete?: number;
     updateTime?: string;
     userAccount?: string;
@@ -264,9 +303,9 @@ declare namespace API {
   };
 
   type UserAddRequest = {
-    userAccount?: string;
     userAvatar?: string;
     userName?: string;
+    userProfile?: string;
     userRole?: string;
   };
 
@@ -276,9 +315,9 @@ declare namespace API {
   };
 
   type UserQueryRequest = {
-    current?: number;
-    id?: number;
-    pageSize?: number;
+    current?: string;
+    id?: string;
+    pageSize?: string;
     sortField?: string;
     userAccount?: string;
     userName?: string;
@@ -299,7 +338,7 @@ declare namespace API {
   };
 
   type UserUpdateRequest = {
-    id?: number;
+    id?: string;
     userAvatar?: string;
     userName?: string;
     userProfile?: string;
@@ -308,7 +347,8 @@ declare namespace API {
 
   type UserVO = {
     createTime?: string;
-    id?: number;
+    id?: string;
+    userAccount?: string;
     userAvatar?: string;
     userName?: string;
     userProfile?: string;

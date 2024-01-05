@@ -66,4 +66,9 @@ public class GeneratorQueryRequest extends PageRequest implements Serializable {
      */
     private Integer status;
 
+    /**
+     * 关键字搜索
+     */
+    private String searchText;
+
 }

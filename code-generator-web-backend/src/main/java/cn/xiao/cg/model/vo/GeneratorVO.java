@@ -111,8 +111,7 @@ public class GeneratorVO implements Serializable {
         }
         Generator generator = new Generator();
         BeanUtils.copyProperties(generatorVO, generator);
-        List<String> tagList = generatorVO.getTags();
-        generator.setTags(JSONUtil.toJsonStr(tagList));
+        generator.setTags(JSONUtil.toJsonStr(generatorVO.getTags()));
         generator.setFileConfig(JSONUtil.toJsonStr(generatorVO.getFileConfig()));
         generator.setModelConfig(JSONUtil.toJsonStr(generatorVO.getModelConfig()));
         return generator;
@@ -126,7 +125,7 @@ public class GeneratorVO implements Serializable {
      */
     public static GeneratorVO objToVo(Generator generator) {
         if (Objects.isNull(generator)) {
-            return null;
+            return new GeneratorVO();
         }
         GeneratorVO generatorVO = new GeneratorVO();
         BeanUtils.copyProperties(generator, generatorVO);

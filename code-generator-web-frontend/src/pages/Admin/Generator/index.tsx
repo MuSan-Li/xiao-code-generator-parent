@@ -1,26 +1,27 @@
-import CreateModal from '@/pages/Admin/User/components/CreateModal';
-import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
 import {PlusOutlined} from '@ant-design/icons';
 import type {ActionType, ProColumns} from '@ant-design/pro-components';
-import {PageContainer, ProTable} from '@ant-design/pro-components';
+import {ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, message, Modal, Space, Typography} from 'antd';
+import {Button, message, Modal, Select, Space, Tag, Typography} from 'antd';
 import React, {useRef, useState} from 'react';
-import {deleteUserUsingPost, listUserVoByPageUsingPost} from "@/services/backend/userController";
+import {deleteGeneratorUsingPost, listGeneratorByPageUsingPost} from "@/services/backend/generatorController";
+import CreateModal from "@/pages/Admin/Generator/components/CreateModal";
+import UpdateModal from "@/pages/Admin/Generator/components/UpdateModal";
 
 /**
- * 用户管理页面
+ * 生成器管理页面
  *
  * @constructor
  */
-const UserAdminPage: React.FC = () => {
+const GeneratorAdminPage: React.FC = () => {
+
   // 是否显示新建窗口
   const [createModalVisible, setCreateModalVisible] = useState<boolean>(false);
   // 是否显示更新窗口
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
-  // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.User>();
+  // 当前代码生成器点击的数据
+  const [currentRow, setCurrentRow] = useState<API.Generator>();
 
   /**
    * 删除节点
@@ -34,7 +35,7 @@ const UserAdminPage: React.FC = () => {
         const hide = message.loading('正在删除');
         if (!row) return true;
         try {
-          await deleteUserUsingPost({
+          await deleteGeneratorUsingPost({
             id: row.id as any,
           });
           hide();
@@ -55,7 +56,7 @@ const UserAdminPage: React.FC = () => {
   /**
    * 表格列配置
    */
-  const columns: ProColumns<API.User>[] = [
+  const columns: ProColumns<API.Generator>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -63,19 +64,55 @@ const UserAdminPage: React.FC = () => {
       hideInForm: true,
     },
     {
-      title: '账号',
-      dataIndex: 'userAccount',
-      valueType: 'text',
-      hideInForm: true,
-    },
-    {
-      title: '用户名',
-      dataIndex: 'userName',
+      title: '名称',
+      dataIndex: 'name',
       valueType: 'text',
     },
     {
-      title: '头像',
-      dataIndex: 'userAvatar',
+      title: '描述',
+      dataIndex: 'description',
+      valueType: 'textarea',
+    },
+    {
+      title: '基础包',
+      dataIndex: 'basePackage',
+      valueType: 'text',
+    },
+    {
+      title: '版本',
+      dataIndex: 'version',
+      valueType: 'text',
+    },
+    {
+      title: '作者',
+      dataIndex: 'author',
+      valueType: 'text',
+    },
+    {
+      title: '标签',
+      dataIndex: 'tags',
+      valueType: 'text',
+      renderFormItem(schema) {
+        const {fieldProps} = schema;
+        // @ts-ignore
+        return <Select mode="tags" {...fieldProps} />;
+      },
+      render(_, record) {
+        let tags = record.tags;
+        if (!tags) {
+          // 返回一个空的React元素或适当的占位符
+          return <></>;
+        }
+        return JSON.parse(tags).map((tag: string, index: number) => {
+          return (
+            <Tag key={tag}>{tag}</Tag>
+          );
+        });
+      },
+    },
+    {
+      title: '图片',
+      dataIndex: 'picture',
       valueType: 'image',
       fieldProps: {
         width: 64,
@@ -83,22 +120,35 @@ const UserAdminPage: React.FC = () => {
       hideInSearch: true,
     },
     {
-      title: '简介',
-      dataIndex: 'userProfile',
-      valueType: 'textarea',
-      hideInSearch: true,
+      title: '文件配置',
+      dataIndex: 'fileConfig',
+      valueType: 'jsonCode',
+      hideInSearch:true
     },
     {
-      title: '权限',
-      dataIndex: 'userRole',
+      title: '模型配置',
+      dataIndex: 'modelConfig',
+      valueType: 'jsonCode',
+      hideInSearch:true
+    },
+    {
+      title: '产物包路径',
+      dataIndex: 'distPath',
+      valueType: 'text',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
       valueEnum: {
-        user: {
-          text: '用户',
-        },
-        admin: {
-          text: '管理员',
+        0: {
+          text: '默认',
         },
       },
+    },
+    {
+      title: '创建用户',
+      dataIndex: 'userId',
+      valueType: 'text',
     },
     {
       title: '创建时间',
@@ -137,10 +187,13 @@ const UserAdminPage: React.FC = () => {
       ),
     },
   ];
+
   return (
-    <div className="user-page">
-      <PageContainer title={<></>}>
-      <ProTable<API.User>
+    <div className="generator-admin-page">
+      {/*<Typography.Title level={4} style={{marginBottom: 16}}>*/}
+      {/*  生成器管理*/}
+      {/*</Typography.Title>*/}
+      <ProTable<API.Generator>
         headerTitle={'查询表格'}
         actionRef={actionRef}
         rowKey="key"
@@ -155,19 +208,19 @@ const UserAdminPage: React.FC = () => {
               setCreateModalVisible(true);
             }}
           >
-            <PlusOutlined /> 新建
+            <PlusOutlined/> 新建
           </Button>,
         ]}
         request={async (params, sort, filter) => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const {data, code} = await listUserVoByPageUsingPost({
+          const {data, code} = await listGeneratorByPageUsingPost({
             ...params,
             sortField,
             sortOrder,
-            ...filter,
-          } as API.UserQueryRequest);
+            ...filter
+          } as API.GeneratorQueryRequest);
 
           return {
             success: code === 0,
@@ -201,8 +254,7 @@ const UserAdminPage: React.FC = () => {
           setUpdateModalVisible(false);
         }}
       />
-    </PageContainer>
     </div>
   );
 };
-export default UserAdminPage;
+export default GeneratorAdminPage;

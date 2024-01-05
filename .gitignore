@@ -54,3 +54,5 @@ screenshot
 .eslintcache
 
 build
+
+pnpm-lock.yaml

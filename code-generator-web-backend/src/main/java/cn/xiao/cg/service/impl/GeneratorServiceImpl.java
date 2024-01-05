@@ -74,9 +74,9 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
     @Override
     public LambdaQueryWrapper<Generator> getQueryWrapper(GeneratorQueryRequest generatorQueryRequest) {
 
-        LambdaQueryWrapper<Generator> queryWrapper = Wrappers.lambdaQuery();
+        LambdaQueryWrapper<Generator> wrapper = Wrappers.lambdaQuery();
         if (Objects.isNull(generatorQueryRequest)) {
-            return queryWrapper;
+            return wrapper;
         }
 
         Long id = generatorQueryRequest.getId();
@@ -89,21 +89,28 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         String author = generatorQueryRequest.getAuthor();
         String distPath = generatorQueryRequest.getDistPath();
         Integer status = generatorQueryRequest.getStatus();
+        String searchText = generatorQueryRequest.getSearchText();
 
-        queryWrapper.like(StringUtils.isNotBlank(name), Generator::getName, name);
-        queryWrapper.like(StringUtils.isNotBlank(description), Generator::getDescription, description);
-        queryWrapper.eq(StringUtils.isNotBlank(basePackage), Generator::getBasePackage, basePackage);
-        queryWrapper.eq(StringUtils.isNotBlank(version), Generator::getVersion, version);
-        queryWrapper.like(StringUtils.isNotBlank(author), Generator::getAuthor, author);
-        queryWrapper.like(StringUtils.isNotBlank(distPath), Generator::getDistPath, distPath);
-        queryWrapper.like(ObjectUtil.isNotEmpty(status), Generator::getStatus, status);
-        if (CollUtil.isNotEmpty(tags)) {
-            tags.forEach(tag -> queryWrapper.like(Generator::getTags, "\"" + tag + "\""));
+        // 拼接查询条件
+        if (StringUtils.isNotBlank(searchText)) {
+            wrapper.and(qw -> qw.like(Generator::getName, searchText)
+                    .or()
+                    .like(Generator::getDescription, searchText));
         }
-        queryWrapper.eq(ObjectUtils.isNotEmpty(id), Generator::getId, id);
-        queryWrapper.eq(ObjectUtils.isNotEmpty(userId), Generator::getUserId, userId);
-        queryWrapper.eq(Generator::getIsDelete, false);
-        return queryWrapper;
+
+        wrapper.like(StringUtils.isNotBlank(name), Generator::getName, name);
+        wrapper.like(StringUtils.isNotBlank(description), Generator::getDescription, description);
+        wrapper.eq(StringUtils.isNotBlank(basePackage), Generator::getBasePackage, basePackage);
+        wrapper.eq(StringUtils.isNotBlank(version), Generator::getVersion, version);
+        wrapper.like(StringUtils.isNotBlank(author), Generator::getAuthor, author);
+        wrapper.like(StringUtils.isNotBlank(distPath), Generator::getDistPath, distPath);
+        wrapper.like(ObjectUtil.isNotEmpty(status), Generator::getStatus, status);
+        if (CollUtil.isNotEmpty(tags)) {
+            tags.forEach(tag -> wrapper.like(Generator::getTags, "\"" + tag + "\""));
+        }
+        wrapper.eq(ObjectUtils.isNotEmpty(id), Generator::getId, id);
+        wrapper.eq(ObjectUtils.isNotEmpty(userId), Generator::getUserId, userId);
+        return wrapper;
     }
 
     @Override
@@ -150,13 +157,16 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
 
     @NotNull
     private GeneratorVO getGeneratorVO(Generator generator, Map<Long, List<User>> userIdUserListMap) {
-        GeneratorVO generatorVO = ConvertUtils.convert(generator, GeneratorVO.class);
+        GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
         Long userId = generator.getUserId();
         User user = null;
         if (userIdUserListMap.containsKey(userId)) {
             user = userIdUserListMap.get(userId).get(0);
         }
-        generatorVO.setUser(userService.getUserVO(user));
+        UserVO userVO = userService.getUserVO(user);
+        if (Objects.nonNull(userVO)) {
+            generatorVO.setUser(userVO);
+        }
         return generatorVO;
     }
 

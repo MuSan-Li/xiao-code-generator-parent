@@ -3,7 +3,7 @@
 import { request } from '@umijs/max';
 
 /** addGenerator POST /api/generator/add */
-export async function addGeneratorUsingPOST(
+export async function addGeneratorUsingPost(
   body: API.GeneratorAddRequest,
   options?: { [key: string]: any },
 ) {
@@ -18,7 +18,7 @@ export async function addGeneratorUsingPOST(
 }
 
 /** deleteGenerator POST /api/generator/delete */
-export async function deleteGeneratorUsingPOST(
+export async function deleteGeneratorUsingPost(
   body: API.DeleteRequest,
   options?: { [key: string]: any },
 ) {
@@ -33,7 +33,7 @@ export async function deleteGeneratorUsingPOST(
 }
 
 /** editGenerator POST /api/generator/edit */
-export async function editGeneratorUsingPOST(
+export async function editGeneratorUsingPost(
   body: API.GeneratorEditRequest,
   options?: { [key: string]: any },
 ) {
@@ -48,7 +48,7 @@ export async function editGeneratorUsingPOST(
 }
 
 /** getGeneratorVOById GET /api/generator/get/vo */
-export async function getGeneratorVOByIdUsingGET(
+export async function getGeneratorVoByIdUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.getGeneratorVOByIdUsingGETParams,
   options?: { [key: string]: any },
@@ -62,8 +62,23 @@ export async function getGeneratorVOByIdUsingGET(
   });
 }
 
+/** listGeneratorByPage POST /api/generator/list/page */
+export async function listGeneratorByPageUsingPost(
+  body: API.GeneratorQueryRequest,
+  options?: { [key: string]: any },
+) {
+  return request<API.BaseResponsePageGenerator>('/api/generator/list/page', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+    ...(options || {}),
+  });
+}
+
 /** listGeneratorVOByPage POST /api/generator/list/page/vo */
-export async function listGeneratorVOByPageUsingPOST(
+export async function listGeneratorVoByPageUsingPost(
   body: API.GeneratorQueryRequest,
   options?: { [key: string]: any },
 ) {
@@ -78,7 +93,7 @@ export async function listGeneratorVOByPageUsingPOST(
 }
 
 /** listMyGeneratorVOByPage POST /api/generator/my/list/page/vo */
-export async function listMyGeneratorVOByPageUsingPOST(
+export async function listMyGeneratorVoByPageUsingPost(
   body: API.GeneratorQueryRequest,
   options?: { [key: string]: any },
 ) {
@@ -93,7 +108,7 @@ export async function listMyGeneratorVOByPageUsingPOST(
 }
 
 /** updateGenerator POST /api/generator/update */
-export async function updateGeneratorUsingPOST(
+export async function updateGeneratorUsingPost(
   body: API.GeneratorUpdateRequest,
   options?: { [key: string]: any },
 ) {
