@@ -1,6 +1,7 @@
 package cn.xiao.maker.generator;
 
 import cn.hutool.core.text.StrPool;
+import cn.xiao.maker.constant.CommonConstant;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,7 +37,7 @@ public class JarGenerator {
         // 读取命令输出
         InputStream inputStream = process.getInputStream();
 
-        BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream, "GBK"));
+        BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream, CommonConstant.ENCODING_GBK));
         String line;
         while ((line = bf.readLine()) != null) {
             System.out.println(line);

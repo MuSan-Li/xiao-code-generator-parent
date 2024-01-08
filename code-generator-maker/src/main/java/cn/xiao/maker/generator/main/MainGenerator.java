@@ -9,6 +9,6 @@ public class MainGenerator extends GenerateTemplate {
 
     @Override
     protected void buildDist(String outputPath, String jarName, String sourceCopyDestPath) {
-        System.out.println("取消构建精简包...");
+        System.out.println("不构建精简包...");
     }
 }

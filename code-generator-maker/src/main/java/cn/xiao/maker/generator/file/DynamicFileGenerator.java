@@ -55,7 +55,8 @@ public class DynamicFileGenerator {
         }
         // 5.指定生成的文件 中文乱码
         // Writer out = new FileWriter(outputPath);
-        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)), StandardCharsets.UTF_8));
+        BufferedWriter out = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(outputPath)),
+                StandardCharsets.UTF_8));
         // 6.调用process方法，处理并生成文件
         template.process(model, out);
 

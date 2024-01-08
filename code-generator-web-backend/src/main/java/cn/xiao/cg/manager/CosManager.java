@@ -2,6 +2,8 @@ package cn.xiao.cg.manager;
 
 import cn.xiao.cg.config.CosClientConfig;
 import com.qcloud.cos.COSClient;
+import com.qcloud.cos.model.COSObject;
+import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import org.springframework.stereotype.Component;
@@ -44,8 +46,19 @@ public class CosManager {
      * @return
      */
     public PutObjectResult putObject(String key, File file) {
-        PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
-                file);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key, file);
         return cosClient.putObject(putObjectRequest);
     }
+
+    /**
+     * 上传对象
+     *
+     * @param key 唯一键
+     * @return
+     */
+    public COSObject getObject(String key) {
+        GetObjectRequest getObjectRequest = new GetObjectRequest(cosClientConfig.getBucket(), key);
+        return cosClient.getObject(getObjectRequest);
+    }
+
 }

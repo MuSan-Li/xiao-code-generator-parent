@@ -17,6 +17,11 @@ public class TemplateMakerModelConfig implements Serializable {
 
     private ModelGroupConfig modelGroupConfig;
 
+    /**
+     * 是否替换包名 默认 false 如果为 true 替换文件夹路径
+     */
+    private boolean isBasePackage = false;
+
     @Data
     public static class ModelInfoConfig implements Serializable {
 

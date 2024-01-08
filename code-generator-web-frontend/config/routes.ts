@@ -8,6 +8,7 @@ export default [
     ]
   },
   { path: '/', icon: 'home', component: './Index', name: '主页' },
+  {path: '/test/file', icon: 'home', component: './Test/File', name: '测试文件上传下载', hideInMenu: true},
   {
     path: '/admin',
     icon: 'crown',
@@ -15,7 +16,7 @@ export default [
     access: 'canAdmin',
     routes: [
       { path: '/admin', redirect: '/admin/user' },
-      { icon: 'table', path: '/admin/user', component: './Admin/User', name: "用户管理" },
+      {icon: 'team', path: '/admin/user', component: './Admin/User', name: "用户管理"},
       {icon: 'tools', path: '/admin/generator', component: './Admin/Generator', name: '生成器管理',},
     ],
   },

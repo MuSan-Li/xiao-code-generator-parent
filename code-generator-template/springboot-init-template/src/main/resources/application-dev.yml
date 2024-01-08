@@ -8,28 +8,25 @@ spring:
     timeout: 86400
 
   # 数据库配置
-  # TODO 需替换配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/my_db
     username: root
     password: root
 
-  # Redis 配置
-  # TODO 需替换配置，然后取消注释
-  #  redis:
-  #    database: 1
-  #    host: localhost
-  #    port: 6379
-  #    timeout: 5000
-  #    password: redisPassword
+# Redis 配置
+#  redis:
+#    database: 1
+#    host: localhost
+#    port: 6379
+#    timeout: 5000
+#    password: redisPassword
 
-  # Elasticsearch 配置
-  # TODO 需替换配置，然后取消注释
-  #  elasticsearch:
-  #    uris: http://localhost:9200
-  #    username: esUsername
-  #    password: esPassword
+# Elasticsearch 配置
+#  elasticsearch:
+#    uris: http://localhost:9200
+#    username: esUsername
+#    password: esPassword
 
 server:
   address: 0.0.0.0
@@ -52,7 +49,6 @@ mybatis-plus:
       logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
 
 # 对象存储
-# TODO 需替换配置
 cos:
   client:
     accessKey: xxx

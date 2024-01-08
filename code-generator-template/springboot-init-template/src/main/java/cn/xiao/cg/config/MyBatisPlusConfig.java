@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  * @author xiao
  */
 @Configuration
-@MapperScan("cn.xiao.springbootinit.mapper")
+@MapperScan("cn.xiao.cg.mapper")
 public class MyBatisPlusConfig {
 
     /**

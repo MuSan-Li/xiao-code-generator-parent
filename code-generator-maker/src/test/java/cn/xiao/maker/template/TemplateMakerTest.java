@@ -205,8 +205,8 @@ public class TemplateMakerTest {
         int index = 1;
         while (true) {
             try {
-                System.out.println("index = " + index);
                 templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "templateMaker-" + index + ".json");
+                System.out.println("index = " + index);
                 templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
                 TemplateMaker.makeTemplate(templateMakerConfig);
                 index++;

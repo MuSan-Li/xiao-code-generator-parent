@@ -27,9 +27,11 @@ import cn.xiao.maker.template.model.TemplateMakerOutputConfig;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -89,9 +91,11 @@ public class TemplateMaker {
         if (!FileUtil.exist(templateDirPath)) {
             FileUtil.mkdir(templateDirPath);
             FileUtil.copy(originRootPath, templateDirPath, true);
+            // 删除和项目无关文件或者文件夹 例如 .idea文件夹 target文件夹
+            delOtherFile(templateDirPath);
         }
 
-        //源模版项目根目录
+        // 工作空间根目录
         // 处理多次输入 originRootPath 为空场景
         String sourceRootPath = FileUtil.loopFiles(new File(templateDirPath), 1, null)
                 .stream()
@@ -109,7 +113,7 @@ public class TemplateMaker {
         // 处理模型信息
         List<ModelsDTO> newModelsDTOList = getModelInfoList(modelConfig);
 
-        // 生成配置文件
+        // 生成 meta.json 配置文件
         String metaOutPath = templateDirPath + File.separator + CommonConstant.META_NAME;
 
         if (FileUtil.exist(metaOutPath)) {
@@ -127,21 +131,46 @@ public class TemplateMaker {
             FileConfigDTO fileConfigDTO = new FileConfigDTO();
             fileConfigDTO.setSourceRootPath(sourceRootPath);
 
-            // 3.1构造file配置参数
+            // 构造file配置参数
             fileConfigDTO.setFiles(newFilesDTOList);
             newMeta.setFileConfig(fileConfigDTO);
 
-            // 3.2构造model配置参数
+            // 构造model配置参数
             ModelConfigDTO modelConfigDTO = new ModelConfigDTO();
             modelConfigDTO.setModels(newModelsDTOList);
             newMeta.setModelConfig(modelConfigDTO);
         }
 
+        // 从未分组文件中移除组内的同名文件
         removeFileFormRoot(outputConfig, newMeta);
 
-        // 3.3创建元信息文件
+        // 创建元信息文件
         FileUtil.writeUtf8String(JSONUtil.toJsonPrettyStr(newMeta), metaOutPath);
         return id;
+    }
+
+    /**
+     * 删除和模板项目无关文件
+     *
+     * @param templateDirPath
+     */
+    private static void delOtherFile(String templateDirPath) {
+        List<File> fileList = FileUtil.loopFiles(new File(templateDirPath), 2, null);
+
+        Set<String> delFileSet = new HashSet<>();
+        delFileSet.add(".idea");
+        delFileSet.add(".mvn");
+        delFileSet.add("target");
+        delFileSet.add("mvnw");
+        delFileSet.add("mvnw.cmd");
+        delFileSet.add(".iml");
+
+        fileList = fileList.stream()
+                .filter(item -> delFileSet.stream().anyMatch(delFileName -> CharSequenceUtil.contains(item.getName(), delFileName)))
+                .collect(Collectors.toList());
+        System.out.println(fileList);
+
+        fileList.forEach(FileUtil::del);
     }
 
     /**
@@ -212,8 +241,7 @@ public class TemplateMaker {
      * @return
      */
     private static List<FilesDTO> makeFileTemplates(TemplateMakerFileConfig fileConfig,
-                                                    TemplateMakerModelConfig modelConfig,
-                                                    String sourceRootPath) {
+                                                    TemplateMakerModelConfig modelConfig, String sourceRootPath) {
 
         List<FilesDTO> newFilesDTOList = new ArrayList<>();
 
@@ -253,6 +281,7 @@ public class TemplateMaker {
         }
         return newFilesDTOList;
     }
+
 
     /**
      * 处理file group

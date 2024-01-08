@@ -31,7 +31,7 @@ public class Knife4jConfig {
                         .build())
                 .select()
                 // 指定 Controller 扫描包路径
-                .apis(RequestHandlerSelectors.basePackage("cn.xiao.springbootinit.controller"))
+                .apis(RequestHandlerSelectors.basePackage("cn.xiao.cg.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }

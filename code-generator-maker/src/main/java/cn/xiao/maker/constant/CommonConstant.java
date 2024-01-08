@@ -52,4 +52,9 @@ public abstract class CommonConstant {
      */
     public static final String BLANK = "";
 
+    /**
+     * GBK 编码
+     */
+    public static final String ENCODING_GBK = "GBK";
+
 }

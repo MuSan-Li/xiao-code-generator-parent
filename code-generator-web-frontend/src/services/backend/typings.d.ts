@@ -144,12 +144,12 @@ declare namespace API {
     id?: string;
     name?: string;
     pageSize?: number;
+    searchText?: string;
     sortField?: string;
     status?: number;
     tags?: string[];
     userId?: string;
     version?: string;
-    searchText?: string;
   };
 
   type GeneratorUpdateRequest = {
@@ -210,7 +210,6 @@ declare namespace API {
     userProfile?: string;
     userRole?: string;
   };
-
   type ModelConfigDTO = {
     models?: ModelsDTO[];
   };
@@ -235,7 +234,7 @@ declare namespace API {
 
   type PageGenerator = {
     countId?: string;
-    current?: string;
+    current?: number;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -248,7 +247,7 @@ declare namespace API {
 
   type PageGeneratorVO = {
     countId?: string;
-    current?: string;
+    current?: number;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -261,7 +260,7 @@ declare namespace API {
 
   type PageUser = {
     countId?: string;
-    current?: string;
+    current?: number;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -274,7 +273,7 @@ declare namespace API {
 
   type PageUserVO = {
     countId?: string;
-    current?: string;
+    current?: number;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -283,6 +282,11 @@ declare namespace API {
     searchCount?: boolean;
     size?: string;
     total?: string;
+  };
+
+  type testDownloadFileUsingGETParams = {
+    /** filepath */
+    filepath?: string;
   };
 
   type uploadFileUsingPOSTParams = {
@@ -315,9 +319,9 @@ declare namespace API {
   };
 
   type UserQueryRequest = {
-    current?: string;
+    current?: number;
     id?: string;
-    pageSize?: string;
+    pageSize?: number;
     sortField?: string;
     userAccount?: string;
     userName?: string;

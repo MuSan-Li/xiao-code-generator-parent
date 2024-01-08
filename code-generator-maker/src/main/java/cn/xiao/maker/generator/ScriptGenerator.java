@@ -1,6 +1,7 @@
 package cn.xiao.maker.generator;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
@@ -28,17 +29,19 @@ public class ScriptGenerator {
         StringBuilder sb = new StringBuilder();
         sb.append("#!/bin/bash").append("\n")
                 .append(String.format("java -jar %s \"$@\"", jarPath));
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + File.separator + mavenScript + ".sh");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),
+                outputPath + File.separator + mavenScript + ".sh");
 
         sb = new StringBuilder();
         sb.append("git init").append("\n")
                 .append("git add .").append("\n")
                 .append("git commit -m \"first commit\"");
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + File.separator + gitScript + ".sh");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),
+                outputPath + File.separator + gitScript + ".sh");
 
         // win 执行可能报错 直接略过
         // linux系统 要给文件赋权限操作 win则不用
-        if (!StrUtil.contains(System.getProperty("os.name").toLowerCase(), "win")) {
+        if (!CharSequenceUtil.contains(System.getProperty("os.name").toLowerCase(), "win")) {
             // 添加可执行权限
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
             Files.setPosixFilePermissions(Paths.get(outputPath), permissions);
@@ -47,13 +50,15 @@ public class ScriptGenerator {
         // win
         sb = new StringBuilder();
         sb.append("@echo off").append("\n").append(String.format("java -jar %s %%*", jarPath));
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + File.separator + mavenScript + ".bat");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),
+                outputPath + File.separator + mavenScript + ".bat");
 
         sb = new StringBuilder();
         sb.append("git init").append("\n")
                 .append("git add .").append("\n")
                 .append("git commit -m \"first commit\"");
-        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8), outputPath + File.separator + gitScript + ".bat");
+        FileUtil.writeBytes(sb.toString().getBytes(StandardCharsets.UTF_8),
+                outputPath + File.separator + gitScript + ".bat");
     }
 
 

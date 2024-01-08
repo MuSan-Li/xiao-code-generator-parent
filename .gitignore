@@ -14,6 +14,9 @@ generated/
 templateOutput/
 .temp/
 
+# yaml #
+application-local.yml
+
 # ============================== front ============================== #
 # dependencies
 **/node_modules
