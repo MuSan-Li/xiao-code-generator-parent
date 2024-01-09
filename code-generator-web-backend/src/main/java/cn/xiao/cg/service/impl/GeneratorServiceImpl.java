@@ -13,7 +13,6 @@ import cn.xiao.cg.model.vo.GeneratorVO;
 import cn.xiao.cg.model.vo.UserVO;
 import cn.xiao.cg.service.GeneratorService;
 import cn.xiao.cg.service.UserService;
-import cn.xiao.cg.utils.ConvertUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -115,7 +114,7 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
 
     @Override
     public GeneratorVO getGeneratorVO(Generator generator, HttpServletRequest request) {
-        GeneratorVO generatorVO = ConvertUtils.convert(generator, GeneratorVO.class);
+        GeneratorVO generatorVO = GeneratorVO.objToVo(generator);
         // 1. 关联查询用户信息
         Long userId = generator.getUserId();
         User user = null;

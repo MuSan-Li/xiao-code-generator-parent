@@ -8,7 +8,7 @@ export default [
     ]
   },
   { path: '/', icon: 'home', component: './Index', name: '主页' },
-  {path: '/test/file', icon: 'home', component: './Test/File', name: '测试文件上传下载', hideInMenu: true},
+  {path: '/test/file', icon: 'home', component: './Test/FileUpload', name: '测试文件上传下载', hideInMenu: true},
   {
     path: '/admin',
     icon: 'crown',
@@ -20,5 +20,7 @@ export default [
       {icon: 'tools', path: '/admin/generator', component: './Admin/Generator', name: '生成器管理',},
     ],
   },
+  {path: '/generator/add', icon: 'plus', component: './Generator/Add', name: '创建生成器'},
+  {path: '/generator/update', icon: 'plus', component: './Generator/Add', name: '创建生成器', hideInMenu: true},
   { path: '*', layout: false, component: './404' },
 ];
