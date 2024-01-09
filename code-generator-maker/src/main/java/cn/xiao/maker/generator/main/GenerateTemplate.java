@@ -3,19 +3,17 @@ package cn.xiao.maker.generator.main;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.resource.ClassPathResource;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
+import cn.xiao.maker.constant.CommonConstant;
 import cn.xiao.maker.generator.JarGenerator;
 import cn.xiao.maker.generator.ScriptGenerator;
 import cn.xiao.maker.generator.file.DynamicFileGenerator;
-import cn.xiao.maker.generator.file.StaticFileGenerator;
 import cn.xiao.maker.meta.Meta;
-import cn.xiao.maker.meta.Meta.FileConfigDTO.FilesDTO;
 import cn.xiao.maker.meta.MetaManager;
-import cn.xiao.maker.meta.enums.FileGenerateTypeEnum;
 import freemarker.template.TemplateException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * 生成模板主类
@@ -64,7 +62,7 @@ public abstract class GenerateTemplate {
         System.out.println(meta);
 
         // 输出根路径
-        String projectProperty = System.getProperty("user.dir");
+        String projectProperty = System.getProperty(CommonConstant.USER_DIR);
         String rootPath = projectProperty + File.separator +
                 meta.getFileConfig().getOutputRootPath() + File.separator + meta.getName();
 
@@ -85,7 +83,10 @@ public abstract class GenerateTemplate {
         String jarName = buildScript(meta, rootPath);
 
         // 制作精简代码包
-        buildDist(rootPath, jarName, destSourcePath);
+        String distOutputPath = buildDist(rootPath, jarName, destSourcePath);
+
+        // 制作ZIP压缩包
+        // buildZipPackage(distOutputPath);
     }
 
     /**
@@ -209,7 +210,7 @@ public abstract class GenerateTemplate {
      * @param jarName
      * @param sourceCopyDestPath
      */
-    protected void buildDist(String outputPath, String jarName, String sourceCopyDestPath) {
+    protected String buildDist(String outputPath, String jarName, String sourceCopyDestPath) {
         String distOutputPath = outputPath + "-dist";
 
         // 复制jar包
@@ -230,6 +231,19 @@ public abstract class GenerateTemplate {
 
         // 复制模板文件
         FileUtil.copy(sourceCopyDestPath, distOutputPath, true);
+        return distOutputPath;
+    }
+
+
+    /**
+     * 制作zip 压缩包
+     *
+     * @param outputPath
+     */
+    protected String buildZipPackage(String outputPath) {
+        String zipPath = outputPath + ".zip";
+        ZipUtil.zip(outputPath, zipPath);
+        return zipPath;
     }
 
 }

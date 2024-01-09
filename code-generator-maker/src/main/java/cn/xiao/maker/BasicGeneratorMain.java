@@ -1,6 +1,7 @@
 package cn.xiao.maker;
 
-import cn.xiao.maker.generator.main.MainGenerator;
+import cn.xiao.maker.generator.main.GenerateTemplate;
+import cn.xiao.maker.generator.main.ZipGenerator;
 
 /**
  * 主入口
@@ -16,7 +17,8 @@ public class BasicGeneratorMain {
      * @param args
      */
     public static void main(String[] args) throws Exception {
-        MainGenerator mainGenerator = new MainGenerator();
-        mainGenerator.doGenerate();
+        // GenerateTemplate generator = new MainGenerator();
+        GenerateTemplate generator = new ZipGenerator();
+        generator.doGenerate();
     }
 }

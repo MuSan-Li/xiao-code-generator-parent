@@ -8,7 +8,8 @@ package cn.xiao.maker.generator.main;
 public class MainGenerator extends GenerateTemplate {
 
     @Override
-    protected void buildDist(String outputPath, String jarName, String sourceCopyDestPath) {
+    protected String buildDist(String outputPath, String jarName, String sourceCopyDestPath) {
         System.out.println("不构建精简包...");
+        return "";
     }
 }
