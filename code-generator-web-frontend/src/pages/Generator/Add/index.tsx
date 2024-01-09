@@ -15,9 +15,9 @@ import {
     updateGeneratorUsingPost
 } from "@/services/backend/generatorController";
 import {message, UploadFile} from "antd";
-import {history, useSearchParams} from "@@/exports";
 import {COS_HOST} from "@/constants";
 import PictureUploadPage from '@/components/PictureUploader';
+import {history, useSearchParams} from "@@/exports";
 
 
 /**

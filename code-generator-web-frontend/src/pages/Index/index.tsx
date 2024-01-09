@@ -4,7 +4,7 @@ import {PageContainer, ProFormSelect, ProFormText, QueryFilter} from '@ant-desig
 import {Avatar, Card, Flex, Image, Input, List, message, Tabs, Tag, Typography} from 'antd';
 import moment from 'moment';
 import React, {useEffect, useState} from 'react';
-import {Link} from 'umi';
+import {Link} from "@@/exports";
 
 /**
  * 默认分页参数
@@ -175,7 +175,7 @@ const IndexPage: React.FC = () => {
                     {moment(data.createTime).fromNow()}
                   </Typography.Text>
                   <div>
-                    <Avatar src={data.user?.userAvatar ?? <UserOutlined/>}/>
+                      <Avatar src={data.user?.userAvatar ?? <UserOutlined/>}/>
                   </div>
                 </Flex>
               </Card>
