@@ -175,7 +175,7 @@ const IndexPage: React.FC = () => {
                     {moment(data.createTime).fromNow()}
                   </Typography.Text>
                   <div>
-                      <Avatar src={data.user?.userAvatar ?? <UserOutlined/>}/>
+                    <Avatar src={data.user?.userAvatar ?? <UserOutlined/>}/>
                   </div>
                 </Flex>
               </Card>

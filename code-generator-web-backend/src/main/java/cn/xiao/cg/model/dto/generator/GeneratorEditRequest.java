@@ -3,7 +3,6 @@ package cn.xiao.cg.model.dto.generator;
 import cn.xiao.cg.model.meta.Meta;
 import lombok.Data;
 
-import java.awt.*;
 import java.io.Serializable;
 import java.util.List;
 

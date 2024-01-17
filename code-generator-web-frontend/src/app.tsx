@@ -18,7 +18,7 @@ export async function getInitialState(): Promise<InitialState> {
     currentUser: undefined,
   };
   // 如果不是登录页面，执行
-  const { location } = history;
+  const {location} = history;
   if (location.pathname !== loginPath) {
     try {
       const res = await getLoginUserUsingGet();
@@ -32,17 +32,17 @@ export async function getInitialState(): Promise<InitialState> {
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 // @ts-ignore
-export const layout: RunTimeLayoutConfig = ({ initialState }) => {
+export const layout: RunTimeLayoutConfig = ({initialState}) => {
   return {
     avatarProps: {
       render: () => {
-        return <AvatarDropdown />;
+        return <AvatarDropdown/>;
       },
     },
     waterMarkProps: {
       content: initialState?.currentUser?.userName,
     },
-    footerRender: () => <Footer />,
+    footerRender: () => <Footer/>,
     menuHeaderRender: undefined,
     ...defaultSettings,
   };

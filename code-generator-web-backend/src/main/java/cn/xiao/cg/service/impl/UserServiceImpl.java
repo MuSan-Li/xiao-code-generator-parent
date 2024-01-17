@@ -44,15 +44,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     private static final String SALT = "xiao";
 
-    @Override
-    public long userRegister(String userAccount, String userPassword, String checkPassword) {
-        checkRegisterUserInfo(userAccount, userPassword, checkPassword);
-        User user = new User();
-        user.setUserAccount(userAccount);
-        user.setUserPassword(userPassword);
-        return userRegister(user);
-    }
-
     /**
      * 校验用户信息
      *
@@ -78,6 +69,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!userPassword.equals(checkPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "两次输入的密码不一致");
         }
+    }
+
+    @Override
+    public long userRegister(String userAccount, String userPassword, String checkPassword) {
+        checkRegisterUserInfo(userAccount, userPassword, checkPassword);
+        User user = new User();
+        user.setUserAccount(userAccount);
+        user.setUserPassword(userPassword);
+        return userRegister(user);
     }
 
     @Override

@@ -123,13 +123,13 @@ const GeneratorAdminPage: React.FC = () => {
       title: '文件配置',
       dataIndex: 'fileConfig',
       valueType: 'jsonCode',
-      hideInSearch:true
+      hideInSearch: true
     },
     {
       title: '模型配置',
       dataIndex: 'modelConfig',
       valueType: 'jsonCode',
-      hideInSearch:true
+      hideInSearch: true
     },
     {
       title: '产物包路径',

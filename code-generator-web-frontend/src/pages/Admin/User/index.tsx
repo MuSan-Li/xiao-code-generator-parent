@@ -140,68 +140,68 @@ const UserAdminPage: React.FC = () => {
   return (
     <div className="user-page">
       <PageContainer title={<></>}>
-      <ProTable<API.User>
-        headerTitle={'查询表格'}
-        actionRef={actionRef}
-        rowKey="key"
-        search={{
-          labelWidth: 120,
-        }}
-        toolBarRender={() => [
-          <Button
-            type="primary"
-            key="primary"
-            onClick={() => {
-              setCreateModalVisible(true);
-            }}
-          >
-            <PlusOutlined /> 新建
-          </Button>,
-        ]}
-        request={async (params, sort, filter) => {
-          const sortField = Object.keys(sort)?.[0];
-          const sortOrder = sort?.[sortField] ?? undefined;
+        <ProTable<API.User>
+          headerTitle={'查询表格'}
+          actionRef={actionRef}
+          rowKey="key"
+          search={{
+            labelWidth: 120,
+          }}
+          toolBarRender={() => [
+            <Button
+              type="primary"
+              key="primary"
+              onClick={() => {
+                setCreateModalVisible(true);
+              }}
+            >
+              <PlusOutlined/> 新建
+            </Button>,
+          ]}
+          request={async (params, sort, filter) => {
+            const sortField = Object.keys(sort)?.[0];
+            const sortOrder = sort?.[sortField] ?? undefined;
 
-          const {data, code} = await listUserVoByPageUsingPost({
-            ...params,
-            sortField,
-            sortOrder,
-            ...filter,
-          } as API.UserQueryRequest);
+            const {data, code} = await listUserVoByPageUsingPost({
+              ...params,
+              sortField,
+              sortOrder,
+              ...filter,
+            } as API.UserQueryRequest);
 
-          return {
-            success: code === 0,
-            data: data?.records || [],
-            total: Number(data?.total) || 0,
-          };
-        }}
-        columns={columns}
-      />
-      <CreateModal
-        visible={createModalVisible}
-        columns={columns}
-        onSubmit={() => {
-          setCreateModalVisible(false);
-          actionRef.current?.reload();
-        }}
-        onCancel={() => {
-          setCreateModalVisible(false);
-        }}
-      />
-      <UpdateModal
-        visible={updateModalVisible}
-        columns={columns}
-        oldData={currentRow}
-        onSubmit={() => {
-          setUpdateModalVisible(false);
-          setCurrentRow(undefined);
-          actionRef.current?.reload();
-        }}
-        onCancel={() => {
-          setUpdateModalVisible(false);
-        }}
-      />
-    </PageContainer>
+            return {
+              success: code === 0,
+              data: data?.records || [],
+              total: Number(data?.total) || 0,
+            };
+          }}
+          columns={columns}
+        />
+        <CreateModal
+          visible={createModalVisible}
+          columns={columns}
+          onSubmit={() => {
+            setCreateModalVisible(false);
+            actionRef.current?.reload();
+          }}
+          onCancel={() => {
+            setCreateModalVisible(false);
+          }}
+        />
+        <UpdateModal
+          visible={updateModalVisible}
+          columns={columns}
+          oldData={currentRow}
+          onSubmit={() => {
+            setUpdateModalVisible(false);
+            setCurrentRow(undefined);
+            actionRef.current?.reload();
+          }}
+          onCancel={() => {
+            setUpdateModalVisible(false);
+          }}
+        />
+      </PageContainer>
     </div>
   );
 };

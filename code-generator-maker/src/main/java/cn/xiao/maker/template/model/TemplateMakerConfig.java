@@ -13,16 +13,11 @@ import java.io.Serializable;
 @Data
 public class TemplateMakerConfig implements Serializable {
 
-    private Long id;
-
-    private Meta meta = new Meta();
-
-    private String originProjectPath;
-
     TemplateMakerFileConfig fileConfig = new TemplateMakerFileConfig();
-
     TemplateMakerModelConfig modelConfig = new TemplateMakerModelConfig();
-
     TemplateMakerOutputConfig outputConfig = new TemplateMakerOutputConfig();
+    private Long id;
+    private Meta meta = new Meta();
+    private String originProjectPath;
 
 }

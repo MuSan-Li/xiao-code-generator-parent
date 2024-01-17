@@ -10,39 +10,30 @@ import cn.hutool.core.text.StrPool;
 public abstract class CommonConstant {
 
 
-    private CommonConstant() {
-    }
-
     /**
      * 元信息名称
      */
     public static final String META_NAME = "meta.json";
-
     /**
      * 模板文件后缀
      */
     public static final String MODEL_END_WITH = ".ftl";
-
     /**
      * 根目录
      */
     public static final String USER_DIR = "user.dir";
-
     /**
      * 模板空间
      */
     public static final String WORK_SPACE = ".temp";
-
     /**
      * 替换变量
      */
     public static final String FORMAT_FIELD_NAME = "${%s}";
-
     /**
      * 替换变量 kv
      */
     public static final String FORMAT_KV_FIELD_NAME = "${%s.%s}";
-
     /**
      * \\\\字符
      */
@@ -51,10 +42,12 @@ public abstract class CommonConstant {
      * "" 字符
      */
     public static final String BLANK = "";
-
     /**
      * GBK 编码
      */
     public static final String ENCODING_GBK = "GBK";
+
+    private CommonConstant() {
+    }
 
 }

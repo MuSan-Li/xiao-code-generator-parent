@@ -2,7 +2,6 @@ package cn.xiao.cg.basic.generator;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.xiao.cg.basic.model.DataModel;
 import cn.xiao.cg.basic.model.MainTemplateConfig;
 import freemarker.template.Configuration;
 import freemarker.template.Template;

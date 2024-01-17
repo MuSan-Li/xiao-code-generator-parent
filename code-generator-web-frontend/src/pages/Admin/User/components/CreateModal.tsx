@@ -35,7 +35,7 @@ const handleAdd = async (fields: API.UserAddRequest) => {
  * @constructor
  */
 const CreateModal: React.FC<Props> = (props) => {
-  const { visible, columns, onSubmit, onCancel } = props;
+  const {visible, columns, onSubmit, onCancel} = props;
 
   return (
     <Modal
