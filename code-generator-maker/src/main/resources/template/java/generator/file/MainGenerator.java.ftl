@@ -24,46 +24,46 @@ import ${basePackage}.model.DataModel;
 */
 public class MainGenerator {
 
-    private MainGenerator() {
-    }
+private MainGenerator() {
+}
 
-    public static void doGenerate(DataModel model) {
-        try {
-            String inputRootPath = "${fileConfig.inputRootPath}";
-            String outputFileName = new File(inputRootPath).getName();
-            String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
+public static void doGenerator(DataModel model) {
+try {
+String inputRootPath = "${fileConfig.inputRootPath}";
+String outputFileName = new File(inputRootPath).getName();
+String outputRootPath = "${fileConfig.outputRootPath}" + File.separator + outputFileName;
 
-            String inputPath;
-            String outputPath;
+String inputPath;
+String outputPath;
 
-            <#list modelConfig.models as modelInfo>
-                <#if modelInfo.groupKey??>
-                    <#list modelInfo.models as subModelInfo>
-                        ${subModelInfo.type} ${subModelInfo.fieldName} = model.${modelInfo.groupKey}.${subModelInfo.fieldName};
-                    </#list>
-                <#else>
-                    ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
-                </#if>
+<#list modelConfig.models as modelInfo>
+    <#if modelInfo.groupKey??>
+        <#list modelInfo.models as subModelInfo>
+            ${subModelInfo.type} ${subModelInfo.fieldName} = model.${modelInfo.groupKey}.${subModelInfo.fieldName};
+        </#list>
+    <#else>
+        ${modelInfo.type} ${modelInfo.fieldName} = model.${modelInfo.fieldName};
+    </#if>
 
+</#list>
+
+<#list fileConfig.files as fileInfo>
+    <#if fileInfo.groupKey??>
+        <#if fileInfo.condition??>
+            if(${fileInfo.condition}){
+            <#list fileInfo.files as fileInfo>
+                <@generateFile indent="                     " fileInfo=fileInfo />
             </#list>
-
-            <#list fileConfig.files as fileInfo>
-                <#if fileInfo.groupKey??>
-                    <#if fileInfo.condition??>
-                        if(${fileInfo.condition}){
-                        <#list fileInfo.files as fileInfo>
-                            <@generateFile indent="                     " fileInfo=fileInfo />
-                        </#list>
-                        }
-                    <#else >
-                        <@generateFile indent="        " fileInfo=fileInfo/>
-                    </#if>
-                <#else>
-                    <@generateFile indent="            " fileInfo=fileInfo/>
-                </#if>
-            </#list>
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+            }
+        <#else >
+            <@generateFile indent="        " fileInfo=fileInfo/>
+        </#if>
+    <#else>
+        <@generateFile indent="            " fileInfo=fileInfo/>
+    </#if>
+</#list>
+} catch (Exception e) {
+throw new RuntimeException(e);
+}
+}
 }

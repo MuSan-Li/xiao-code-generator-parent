@@ -2,7 +2,7 @@ import {ProColumns, ProTable} from '@ant-design/pro-components';
 import '@umijs/max';
 import {message, Modal} from 'antd';
 import React from 'react';
-import {updateUserUsingPost} from "@/services/backend/userController";
+import {updateUserUsingPost} from '@/services/backend/userController';
 
 interface Props {
   oldData?: API.User;
@@ -37,7 +37,7 @@ const handleUpdate = async (fields: API.UserUpdateRequest) => {
  * @constructor
  */
 const UpdateModal: React.FC<Props> = (props) => {
-  const { oldData, visible, columns, onSubmit, onCancel } = props;
+  const {oldData, visible, columns, onSubmit, onCancel} = props;
 
   if (!oldData) {
     return <></>;

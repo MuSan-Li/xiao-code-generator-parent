@@ -14,7 +14,7 @@ import java.util.concurrent.Callable;
         ${indent} * ${modelInfo.description}
         ${indent} */
     </#if>
-    ${indent}@CommandLine.Option(names = {<#if modelInfo.abbr??> "-${modelInfo.abbr}"</#if>"--${modelInfo.fieldName}"}, arity = "0..1", <#if modelInfo.description??>description = "${modelInfo.description}",</#if>  echo = true, interactive = true)
+    ${indent}@CommandLine.Option(names = {<#if modelInfo.abbr??> "-${modelInfo.abbr}",</#if>"--${modelInfo.fieldName}"}, arity = "0..1", <#if modelInfo.description??>description = "${modelInfo.description}",</#if>  echo = true, interactive = true)
     ${indent}public ${modelInfo.type} ${modelInfo.fieldName} <#if modelInfo.defaultValue??> = ${modelInfo.defaultValue?c}</#if>;
 </#macro>
 
@@ -34,7 +34,8 @@ import java.util.concurrent.Callable;
 */
 @Data
 @CommandLine.Command(name = "generate", mixinStandardHelpOptions = true)
-public class GenerateCommand implements Callable<Integer> {
+public class GenerateCommand implements Callable
+<Integer> {
 
     <#list modelConfig.models as modelInfo>
 
@@ -89,7 +90,7 @@ public class GenerateCommand implements Callable<Integer> {
         </#if>
     </#list>
     System.out.println("配置信息:" + dataModel);
-    MainGenerator.doGenerate(dataModel);
+    MainGenerator.doGenerator(dataModel);
     return 0;
     }
-}
+    }

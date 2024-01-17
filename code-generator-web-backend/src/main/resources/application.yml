@@ -13,7 +13,7 @@ spring:
   servlet:
     multipart:
       # 大小限制
-      max-file-size: 1MB
+      max-file-size: 10MB
 
 mybatis-plus:
   configuration:

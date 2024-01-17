@@ -1,7 +1,10 @@
 package cn.xiao.cg.controller;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.util.ZipUtil;
 import cn.hutool.json.JSONUtil;
 import cn.xiao.cg.annotation.AuthCheck;
 import cn.xiao.cg.common.BaseResponse;
@@ -16,6 +19,7 @@ import cn.xiao.cg.model.dto.generator.GeneratorAddRequest;
 import cn.xiao.cg.model.dto.generator.GeneratorEditRequest;
 import cn.xiao.cg.model.dto.generator.GeneratorQueryRequest;
 import cn.xiao.cg.model.dto.generator.GeneratorUpdateRequest;
+import cn.xiao.cg.model.dto.generator.GeneratorUseRequest;
 import cn.xiao.cg.model.entity.Generator;
 import cn.xiao.cg.model.entity.User;
 import cn.xiao.cg.model.meta.Meta;
@@ -37,9 +41,16 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 帖子接口
@@ -69,8 +80,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/add")
-    public BaseResponse<Long> addGenerator(@RequestBody GeneratorAddRequest addRequest,
-                                           HttpServletRequest request) {
+    public BaseResponse<Long> addGenerator(@RequestBody GeneratorAddRequest addRequest, HttpServletRequest request) {
         if (Objects.isNull(addRequest)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -104,8 +114,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteGenerator(@RequestBody DeleteRequest deleteRequest,
-                                                 HttpServletRequest request) {
+    public BaseResponse<Boolean> deleteGenerator(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (Objects.isNull(deleteRequest) || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -185,8 +194,7 @@ public class GeneratorController {
     public BaseResponse<Page<Generator>> listGeneratorByPage(@RequestBody GeneratorQueryRequest queryRequest) {
         long current = queryRequest.getCurrent();
         long size = queryRequest.getPageSize();
-        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
-                generatorService.getQueryWrapper(queryRequest));
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size), generatorService.getQueryWrapper(queryRequest));
         return ResultUtils.success(generatorPage);
     }
 
@@ -198,14 +206,12 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/list/page/vo")
-    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest queryRequest,
-                                                                 HttpServletRequest request) {
+    public BaseResponse<Page<GeneratorVO>> listGeneratorVOByPage(@RequestBody GeneratorQueryRequest queryRequest, HttpServletRequest request) {
         long current = queryRequest.getCurrent();
         long size = queryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
-                generatorService.getQueryWrapper(queryRequest));
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size), generatorService.getQueryWrapper(queryRequest));
         return ResultUtils.success(generatorService.getGeneratorVOPage(generatorPage, request));
     }
 
@@ -217,8 +223,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/my/list/page/vo")
-    public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest queryRequest,
-                                                                   HttpServletRequest request) {
+    public BaseResponse<Page<GeneratorVO>> listMyGeneratorVOByPage(@RequestBody GeneratorQueryRequest queryRequest, HttpServletRequest request) {
         if (Objects.isNull(queryRequest)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -228,8 +233,7 @@ public class GeneratorController {
         long size = queryRequest.getPageSize();
         // 限制爬虫
         ThrowUtils.throwIf(size > 20, ErrorCode.PARAMS_ERROR);
-        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size),
-                generatorService.getQueryWrapper(queryRequest));
+        Page<Generator> generatorPage = generatorService.page(new Page<>(current, size), generatorService.getQueryWrapper(queryRequest));
         return ResultUtils.success(generatorService.getGeneratorVOPage(generatorPage, request));
     }
 
@@ -243,8 +247,7 @@ public class GeneratorController {
      * @return
      */
     @PostMapping("/edit")
-    public BaseResponse<Boolean> editGenerator(@RequestBody GeneratorEditRequest editRequest,
-                                               HttpServletRequest request) {
+    public BaseResponse<Boolean> editGenerator(@RequestBody GeneratorEditRequest editRequest, HttpServletRequest request) {
         if (Objects.isNull(editRequest) || editRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -284,8 +287,7 @@ public class GeneratorController {
      * @return
      */
     @GetMapping("/download")
-    public void downloadGeneratorById(long id, HttpServletRequest request,
-                                      HttpServletResponse response) throws IOException {
+    public void downloadGeneratorById(long id, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -322,4 +324,95 @@ public class GeneratorController {
         }
     }
 
+
+    /**
+     * 使用代码生成器
+     *
+     * @param generatorUseRequest
+     * @param request
+     * @param response
+     * @return
+     */
+    @PostMapping("/use")
+    public void useGenerator(@RequestBody GeneratorUseRequest generatorUseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // 获取用户输入的请求参数
+        Long id = generatorUseRequest.getId();
+        Map<String, Object> dataModel = generatorUseRequest.getDataModel();
+        // 需要用户登录
+        User loginUser = userService.getLoginUser(request);
+        log.info("userId = {} 使用了生成器 id = {}", loginUser.getId(), id);
+        Generator generator = generatorService.getById(id);
+        if (generator == null) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+        // 生成器的存储路径
+        String distPath = generator.getDistPath();
+        if (CharSequenceUtil.isBlank(distPath)) {
+            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "产物包不存在");
+        }
+        // 从对象存储下载生成器的压缩包
+        // 定义独立的工作空间
+        String projectPath = System.getProperty("user.dir");
+        String tempDirPath = String.format("%s/.temp/use/%s", projectPath, id);
+        String zipFilePath = tempDirPath + "/dist.zip";
+        if (!FileUtil.exist(zipFilePath)) {
+            FileUtil.touch(zipFilePath);
+        }
+        try {
+            cosManager.download(distPath, zipFilePath);
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成器下载失败");
+        }
+        // 解压压缩包，得到脚本文件
+        File unzipDistDir = ZipUtil.unzip(zipFilePath);
+        // 将用户输入的参数写到 json 文件中
+        String dataModelFilePath = tempDirPath + "/dataModel.json";
+        String jsonStr = JSONUtil.toJsonStr(dataModel);
+        FileUtil.writeUtf8String(jsonStr, dataModelFilePath);
+        // 执行脚本
+        // 找到脚本文件所在路径
+        // 要注意，如果不是 windows 系统，找 generator 文件而不是 bat
+        File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null).stream()
+                .filter(file -> file.isFile() && "generator.bat".equals(file.getName()))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+        // 添加可执行权限
+        // try {
+        //     Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+        //     Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
+        // } catch (Exception e) {
+        //     log.error("设置脚本文件权限失败");
+        // }
+        // 构造命令
+        File scriptDir = scriptFile.getParentFile();
+        // 注意，如果是 mac / linux 系统，要用 "./generator"
+        String scriptAbsolutePath = scriptFile.getAbsolutePath().replace("\\", "/");
+        String[] commands = new String[]{scriptAbsolutePath, "json-generate", "--file=" + dataModelFilePath};
+        // 这里一定要拆分！
+        ProcessBuilder processBuilder = new ProcessBuilder(commands);
+        processBuilder.directory(scriptDir);
+        try {
+            Process process = processBuilder.start();
+            // 读取命令的输出
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            reader.lines().forEach(line -> log.info("line => {}", line));
+            // 等待命令执行完成
+            int exitCode = process.waitFor();
+            log.info("命令执行结束，退出码：{}", exitCode);
+        } catch (Exception e) {
+            log.error("执行生成器脚本错误,", e);
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "执行生成器脚本错误");
+        }
+        // 压缩得到的生成结果，返回给前端
+        String generatedPath = scriptDir.getAbsolutePath() + "/generated";
+        String resultPath = tempDirPath + "/result.zip";
+        File resultFile = ZipUtil.zip(generatedPath, resultPath);
+        // 设置响应头
+        response.setContentType("application/octet-stream;charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + resultFile.getName());
+        Files.copy(resultFile.toPath(), response.getOutputStream());
+        // 清理文件
+        CompletableFuture.runAsync(() -> FileUtil.del(tempDirPath));
+    }
 }

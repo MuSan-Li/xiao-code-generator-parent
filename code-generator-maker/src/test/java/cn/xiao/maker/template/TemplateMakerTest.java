@@ -1,7 +1,6 @@
 package cn.xiao.maker.template;
 
 import cn.hutool.core.io.resource.ResourceUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import cn.xiao.maker.meta.Meta;
 import cn.xiao.maker.template.model.FileFilterConfig;
@@ -16,6 +15,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class TemplateMakerTest {
+
+    /**
+     * 测试制作ACM模板
+     */
+    @Test
+    public void testACMMakeTemplate() {
+        String rootPath = "examples/acm-init/";
+        String templateMakerJsonStr = ResourceUtil.readUtf8Str(rootPath + "/templateMaker.json");
+        TemplateMakerConfig templateMakerConfig = JSONUtil.toBean(templateMakerJsonStr, TemplateMakerConfig.class);
+        long id = TemplateMaker.makeTemplate(templateMakerConfig);
+        System.out.println(id);
+    }
 
     // public static void main(String[] args) {
     //

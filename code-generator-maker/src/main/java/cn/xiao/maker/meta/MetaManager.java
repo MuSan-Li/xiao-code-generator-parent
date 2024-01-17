@@ -2,7 +2,6 @@ package cn.xiao.maker.meta;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.json.JSONUtil;
-import cn.xiao.maker.constant.CommonConstant;
 
 import java.util.Objects;
 
@@ -44,7 +43,8 @@ public class MetaManager {
 
     private static Meta initMetaObject() {
         // String metaJson = ResourceUtil.readUtf8Str(CommonConstant.META_NAME);
-        String metaJson = ResourceUtil.readUtf8Str("spring-boot-init-meta.json");
+        // String metaJson = ResourceUtil.readUtf8Str("spring-boot-init-meta.json");
+        String metaJson = ResourceUtil.readUtf8Str("acm-init-meta.json");
         Meta meta = JSONUtil.toBean(metaJson, Meta.class);
         // 校验meta对象
         MetaValidator.doValidaAndFill(meta);

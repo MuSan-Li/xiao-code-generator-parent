@@ -2,6 +2,7 @@ package cn.xiao.cg.basic.cli;
 
 import cn.xiao.cg.basic.cli.command.ConfigCommand;
 import cn.xiao.cg.basic.cli.command.GeneratorCommand;
+import cn.xiao.cg.basic.cli.command.JsonGenerateCommand;
 import cn.xiao.cg.basic.cli.command.ListCommand;
 import picocli.CommandLine;
 
@@ -19,7 +20,8 @@ public class CommandExecutor implements Runnable {
         commandLine = new CommandLine(this)
                 .addSubcommand(new GeneratorCommand())
                 .addSubcommand(new ConfigCommand())
-                .addSubcommand(new ListCommand());
+                .addSubcommand(new ListCommand())
+                .addSubcommand(new JsonGenerateCommand());
     }
 
     @Override

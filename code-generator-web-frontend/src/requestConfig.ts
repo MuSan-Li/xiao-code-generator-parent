@@ -30,9 +30,8 @@ export const requestConfig: RequestConfig = {
 
   // 响应拦截器
   responseInterceptors: [(response) => {
-
     // 请求地址
-    const requestPath = response.config.url ?? '';
+    // const requestPath = response.config.url ?? '';
 
     // 响应
     const {data} = response as unknown as ResponseStructure;
@@ -44,10 +43,9 @@ export const requestConfig: RequestConfig = {
     const code: number = data.code;
 
     // 文件下载 直接返回
-    if (requestPath.includes("download")) {
+    if (response.data instanceof Blob) {
       return response;
     }
-
 
     // 未登录，且不为获取用户登录信息接口
     if (code === 40100) {
