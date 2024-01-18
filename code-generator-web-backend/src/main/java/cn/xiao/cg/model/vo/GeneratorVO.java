@@ -2,7 +2,7 @@ package cn.xiao.cg.model.vo;
 
 import cn.hutool.json.JSONUtil;
 import cn.xiao.cg.model.entity.Generator;
-import cn.xiao.cg.model.meta.Meta;
+import cn.xiao.maker.meta.Meta;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 

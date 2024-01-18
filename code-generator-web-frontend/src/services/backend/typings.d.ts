@@ -140,6 +140,11 @@ declare namespace API {
     version?: string;
   };
 
+  type GeneratorMakeRequest = {
+    meta?: Meta;
+    zipFilePath?: string;
+  };
+
   type GeneratorQueryRequest = {
     author?: string;
     basePackage?: string;
@@ -221,6 +226,17 @@ declare namespace API {
     userRole?: string;
   };
 
+  type Meta = {
+    author?: string;
+    basePackage?: string;
+    createTime?: string;
+    description?: string;
+    fileConfig?: FileConfigDTO;
+    modelConfig?: ModelConfigDTO;
+    name?: string;
+    version?: string;
+  };
+
   type ModelAndView = {
     empty?: boolean;
     model?: Record<string, any>;
@@ -300,6 +316,7 @@ declare namespace API {
   };
 
   type ModelConfigDTO = {
+    basePackage?: boolean;
     models?: ModelsDTO[];
   };
 

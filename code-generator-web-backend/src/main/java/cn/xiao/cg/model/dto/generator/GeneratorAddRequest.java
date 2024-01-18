@@ -1,6 +1,6 @@
 package cn.xiao.cg.model.dto.generator;
 
-import cn.xiao.cg.model.meta.Meta;
+import cn.xiao.maker.meta.Meta;
 import lombok.Data;
 
 import java.io.Serializable;
