@@ -59,9 +59,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -440,16 +443,16 @@ public class GeneratorController {
         // 找到脚本文件所在路径
         // 要注意，如果不是 windows 系统，找 generator 文件而不是 bat
         File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null).stream()
-                .filter(file -> file.isFile() && "generator.bat".equals(file.getName()))
-                .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .filter(file -> file.isFile() && "generator.sh".equals(file.getName()))
+                        .findFirst()
+                        .orElseThrow(RuntimeException::new);
         // 添加可执行权限
-        // try {
-        //     Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
-        //     Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
-        // } catch (Exception e) {
-        //     log.error("设置脚本文件权限失败");
-        // }
+        try {
+            Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
+            Files.setPosixFilePermissions(scriptFile.toPath(), permissions);
+        } catch (Exception e) {
+            log.error("设置脚本文件权限失败");
+        }
         // 构造命令
         File scriptDir = scriptFile.getParentFile();
         // 注意，如果是 mac / linux 系统，要用 "./generator"
