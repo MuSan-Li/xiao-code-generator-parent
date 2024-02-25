@@ -442,10 +442,11 @@ public class GeneratorController {
         // 执行脚本
         // 找到脚本文件所在路径
         // 要注意，如果不是 windows 系统，找 generator 文件而不是 bat
+        String generatorScriptFileName = getGeneratorScriptCommandByOS();
         File scriptFile = FileUtil.loopFiles(unzipDistDir, 2, null).stream()
-                .filter(file -> file.isFile() && "generator.sh".equals(file.getName()))
-                        .findFirst()
-                        .orElseThrow(RuntimeException::new);
+                .filter(file -> file.isFile() && generatorScriptFileName.equals(file.getName()))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
         // 添加可执行权限
         try {
             Set<PosixFilePermission> permissions = PosixFilePermissions.fromString("rwxrwxrwx");
@@ -606,5 +607,20 @@ public class GeneratorController {
         // 请求参数编码
         String base64 = Base64Encoder.encode(jsonStr);
         return "generator:page:" + base64;
+    }
+
+    public static String getGeneratorScriptCommandByOS() {
+        // win
+        String winMvnCommand = "generator.bat";
+        // other
+        String otherMvnCommand = "generator.sh";
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("win")) {
+            return winMvnCommand;
+        } else if (os.contains("nix") || os.contains("nux") || os.contains("aix")) {
+            return otherMvnCommand;
+        } else {
+            throw new RuntimeException("Unsupported operating system: " + os);
+        }
     }
 }
