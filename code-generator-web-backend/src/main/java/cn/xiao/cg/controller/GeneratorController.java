@@ -58,6 +58,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.PosixFilePermission;
 import java.nio.file.attribute.PosixFilePermissions;
@@ -329,6 +330,11 @@ public class GeneratorController {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean result = generatorService.updateById(generator);
+        // 清理缓存
+        if (result) {
+            String cacheFileDir = getCacheFileDir(id);
+            FileUtil.del(cacheFileDir);
+        }
         return ResultUtils.success(result);
     }
 
@@ -423,16 +429,41 @@ public class GeneratorController {
         // 从对象存储下载生成器的压缩包
         // 定义独立的工作空间
         String projectPath = System.getProperty("user.dir");
-        String tempDirPath = String.format("%s/.temp/use/%s", projectPath, id);
+        // 创建临时目录
+        // 必须要用 userId 区分，否则可能会导致输入参数文件冲突
+        String tempDirPath = String.format("%s/.temp/use/%s/%s", projectPath, id, loginUser.getId());
         String zipFilePath = tempDirPath + "/dist.zip";
+        // 目录不存在则创建
+        if (!FileUtil.exist(tempDirPath)) {
+            FileUtil.mkdir(tempDirPath);
+        }
+
+        // 使用文件缓存
+        String cacheFilePath = getCacheFilePath(id, distPath);
+        Path cacheFilePathObj = Paths.get(cacheFilePath);
+        Path zipFilePathObj = Paths.get(zipFilePath);
+
         if (!FileUtil.exist(zipFilePath)) {
-            FileUtil.touch(zipFilePath);
+            // 有缓存，复制文件
+            if (FileUtil.exist(cacheFilePath)) {
+                Files.copy(cacheFilePathObj, zipFilePathObj);
+            } else {
+                // 没有缓存，从对象存储下载文件
+                FileUtil.touch(zipFilePath);
+                try {
+                    cosManager.download(distPath, zipFilePath);
+                } catch (Exception e) {
+                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成器下载失败");
+                }
+                // 写文件缓存
+                File parentFile = cacheFilePathObj.toFile().getParentFile();
+                if (!FileUtil.exist(parentFile)) {
+                    FileUtil.mkdir(parentFile);
+                }
+                Files.copy(zipFilePathObj, cacheFilePathObj);
+            }
         }
-        try {
-            cosManager.download(distPath, zipFilePath);
-        } catch (Exception e) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "生成器下载失败");
-        }
+
         // 解压压缩包，得到脚本文件
         File unzipDistDir = ZipUtil.unzip(zipFilePath);
         // 将用户输入的参数写到 json 文件中
@@ -622,5 +653,16 @@ public class GeneratorController {
         } else {
             throw new RuntimeException("Unsupported operating system: " + os);
         }
+    }
+
+    /**
+     * 获取缓存文件所在的目录
+     *
+     * @param id 生成器 id
+     * @return
+     */
+    public String getCacheFileDir(long id) {
+        String projectPath = System.getProperty("user.dir");
+        return String.format("%s/.temp/cache/%s", projectPath, id);
     }
 }

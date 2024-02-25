@@ -77,6 +77,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         User user = new User();
         user.setUserAccount(userAccount);
         user.setUserPassword(userPassword);
+        // 默认用户名
+        String userName = "user_" + RandomUtil.randomNumbers(4);
+        user.setUserName(userName);
         return userRegister(user);
     }
 
