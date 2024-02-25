@@ -13,7 +13,12 @@ spring:
   servlet:
     multipart:
       # 大小限制
-      max-file-size: 10MB
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# 不返回 json 为空的字段
+  jackson:
+    default-property-inclusion: non_null
 
 mybatis-plus:
   configuration:

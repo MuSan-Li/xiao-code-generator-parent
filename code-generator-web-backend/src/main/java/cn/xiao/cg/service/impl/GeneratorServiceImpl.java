@@ -148,7 +148,10 @@ public class GeneratorServiceImpl extends ServiceImpl<GeneratorMapper, Generator
         // 填充信息
         List<GeneratorVO> generatorVOList = generatorList.stream()
                 .map(generator -> getGeneratorVO(generator, userIdUserListMap)).collect(Collectors.toList());
-
+        generatorVOList.forEach(item -> {
+            item.setModelConfig(null);
+            item.setFileConfig(null);
+        });
         generatorVOPage.setRecords(generatorVOList);
         return generatorVOPage;
     }

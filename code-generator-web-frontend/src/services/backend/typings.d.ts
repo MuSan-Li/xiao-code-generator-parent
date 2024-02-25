@@ -126,6 +126,10 @@ declare namespace API {
     version?: string;
   };
 
+  type GeneratorCacheRequest = {
+    id?: string;
+  };
+
   type GeneratorEditRequest = {
     author?: string;
     basePackage?: string;
@@ -340,7 +344,7 @@ declare namespace API {
 
   type PageGenerator = {
     countId?: string;
-    current?: number;
+    current?: string;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -353,7 +357,7 @@ declare namespace API {
 
   type PageGeneratorVO = {
     countId?: string;
-    current?: number;
+    current?: string;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -366,7 +370,7 @@ declare namespace API {
 
   type PageUser = {
     countId?: string;
-    current?: number;
+    current?: string;
     maxLimit?: string;
     optimizeCountSql?: boolean;
     orders?: OrderItem[];
@@ -425,7 +429,7 @@ declare namespace API {
   };
 
   type UserQueryRequest = {
-    current?: string;
+    current?: number;
     id?: string;
     pageSize?: number;
     sortField?: string;

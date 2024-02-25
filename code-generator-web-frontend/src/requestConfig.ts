@@ -18,6 +18,7 @@ const isDev = process.env.NODE_ENV === 'development';
  */
 export const requestConfig: RequestConfig = {
   baseURL: isDev ? BACKEND_HOST_LOCAL : BACKEND_HOST_PROD,
+  // 种cookie
   withCredentials: true,
 
   // 请求拦截器
